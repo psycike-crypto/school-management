@@ -1,0 +1,2518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAATIA NEXUS — School Operating System | Vaatia College Makurdi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #171b28;
+      --navy-2: #232838;
+      --gold: #6d5bd0;
+      --gold-2: #2f9ad4;
+      --ink: #1c2430;
+      --muted: #5b6576;
+      --line: #d8deea;
+      --paper: #eef1f7;
+      --white: #fbfcfe;
+      --good: #2a7a56;
+      --warn: #9a6b12;
+      --bad: #b42318;
+      --sky: #2f9ad4;
+      --shadow: 0 8px 24px rgba(23,27,40,.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Source Sans 3", "Segoe UI", sans-serif;
+      background: #e8ecf4;
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+    h1, h2, h3, .hero h1, header.top h2, .price, .brand strong {
+      font-family: Fraunces, Georgia, serif;
+      letter-spacing: 0;
+    }
+    button, input, select, textarea { font-family: inherit; }
+    button { transition: background .15s ease, transform .12s ease, color .15s ease; }
+    button:active { transform: translateY(1px); }
+    .hidden { display: none !important; }
+
+    /* LOGIN */
+    #loginScreen {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 22px;
+      padding: 22px;
+      background:
+        radial-gradient(ellipse at 12% 16%, rgba(109,91,208,.28), transparent 46%),
+        radial-gradient(ellipse at 88% 84%, rgba(47,154,212,.22), transparent 44%),
+        linear-gradient(160deg, #1a1e2c 0%, #222738 100%);
+    }
+    .hero {
+      padding: 48px 44px;
+      color: #eef2f8;
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 24px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .crest {
+      width: 84px; height: 84px; border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.2);
+      display: grid; place-items: center;
+      background: #fff;
+      overflow: hidden;
+      padding: 8px;
+    }
+    .crest img {
+      width: 100%; height: 100%; object-fit: contain;
+    }
+    .hero h1 { font-size: 3rem; margin: 22px 0 8px; line-height: 1.05; }
+    .hero h1 em { font-style: normal; color: var(--gold-2); }
+    .motto { color: var(--gold); letter-spacing: 4.5px; font-size: .72rem; text-transform: uppercase; font-weight: 700; }
+    .hero p { max-width: 460px; line-height: 1.7; color: #d5dce8; margin-top: 16px; }
+    .hero-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 40px; }
+    .hs {
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.18);
+      padding: 16px; border-radius: 16px;
+    }
+    .hs b { display: block; font-family: Fraunces, Georgia, serif; font-size: 1.45rem; color: #fff; }
+    .hs span { font-size: .75rem; color: #7dd3fc; }
+    .login-pane {
+      background: rgba(255,255,255,.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 24px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 44px 32px;
+      color: #eef2f8;
+    }
+    .login-card { width: 100%; max-width: 440px; }
+    .login-card h2 { font-size: 1.7rem; margin-bottom: 6px; color: #fff; }
+    .sub { color: #c5cde0; margin-bottom: 22px; font-size: .95rem; }
+    .login-pane label { color: #d5dce8; }
+    .login-pane input, .login-pane select, .teach-menu select {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.22);
+      color: #fff;
+    }
+    .login-pane input::placeholder { color: rgba(255,255,255,.55); }
+    .login-pane .fine { color: #aeb6c8; }
+    label { display: block; font-size: .78rem; font-weight: 700; margin: 14px 0 6px; color: var(--muted); }
+    input, select, textarea {
+      width: 100%; padding: 12px 13px; border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid rgba(56,189,248,.45); border-color: var(--sky);
+    }
+    .btn {
+      border: none; border-radius: 12px; padding: 12px 16px; font-weight: 700; cursor: pointer;
+    }
+    .btn-gold {
+      background: linear-gradient(90deg, #6d5bd0, #2f9ad4);
+      color: #fff; width: 100%; margin-top: 18px;
+    }
+    .btn-gold:hover { filter: brightness(1.08); }
+    .btn-navy { background: var(--navy); color: #f4ead0; }
+    .btn-navy:hover { background: #13263d; }
+    .btn-ghost { background: rgba(255,255,255,.06); border: 1px solid rgba(56,189,248,.28); color: var(--ink); }
+    .btn-ghost:hover { background: rgba(139,92,246,.18); }
+    .btn-sm { padding: 7px 11px; font-size: .8rem; border-radius: 9px; }
+    .roles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 18px; }
+    .roles button {
+      font-size: .78rem; padding: 9px 10px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      color: #f4ead0;
+      border-radius: 12px; cursor: pointer; text-align: left; font-weight: 600;
+      backdrop-filter: blur(10px);
+    }
+    .roles button:hover, .roles button.open {
+      border-color: var(--gold);
+      background: rgba(139,92,246,.28);
+      color: #fff;
+    }
+    .teach-menu {
+      display: none;
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      backdrop-filter: blur(16px);
+    }
+    .teach-menu.show { display: block; }
+    .fine { font-size: .75rem; color: var(--muted); margin-top: 14px; line-height: 1.5; }
+
+    /* APP SHELL */
+    #app { display: none; min-height: 100vh; }
+    #app.open { display: grid; grid-template-columns: 260px 1fr; }
+    aside {
+      background: #171b28;
+      border-right: 1px solid #2a3042;
+      color: #d5dce8;
+      padding: 20px 12px 24px;
+      position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    }
+    aside::-webkit-scrollbar { width: 6px; }
+    aside::-webkit-scrollbar-thumb { background: #3a4258; border-radius: 99px; }
+    .brand { display: flex; gap: 10px; align-items: center; padding: 4px 8px 16px; border-bottom: 1px solid #2a3042; margin-bottom: 14px; }
+    .brand .crest { width: 42px; height: 42px; font-size: .72rem; }
+    .brand strong { display: block; color: #fff; font-size: 1rem; }
+    .brand small { color: var(--gold); font-size: .65rem; letter-spacing: 1.4px; }
+    nav button {
+      width: 100%; text-align: left; background: transparent; border: none;
+      color: #c5cde0; padding: 9px 10px; border-radius: 10px; cursor: pointer; font-size: .9rem;
+    }
+    nav button:hover { background: #232838; color: #fff; }
+    nav button.active { background: #2a3150; color: #fff; box-shadow: inset 3px 0 0 #2f9ad4; }
+    .who { margin-top: 18px; padding: 12px; background: #1f2434; border: 1px solid #2a3042; border-radius: 12px; font-size: .8rem; color: #c5cde0; }
+    .who b { color: #fff; display: block; font-family: Fraunces, Georgia, serif; }
+    header.top {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 28px;
+      background: #fbfcfe;
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 5;
+    }
+    header.top h2 { font-size: 1.28rem; }
+    header.top .meta { color: var(--muted); font-size: .82rem; }
+    .content { padding: 24px 28px 56px; max-width: 1280px; }
+    .kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 18px; }
+    .kpi {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px; padding: 16px; box-shadow: var(--shadow);
+    }
+    .kpi span { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; font-weight: 700; }
+    .kpi b { display: block; font-family: Fraunces, Georgia, serif; font-size: 1.5rem; margin-top: 6px; }
+    .kpi em { font-style: normal; font-size: .75rem; color: var(--good); }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow); overflow-x: auto;
+    }
+    .card h3 { font-size: 1.05rem; margin-bottom: 12px; }
+    .grid-2 { display: grid; grid-template-columns: 1.15fr .85fr; gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th { text-align: left; font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; padding: 11px 8px; border-bottom: 1px solid var(--line); background: #f3f5fa; position: sticky; top: 0; }
+    td { padding: 11px 8px; border-bottom: 1px solid #e8ecf2; vertical-align: top; }
+    tr:hover td { background: #f4f7fb; }
+    .tag { font-size: .7rem; padding: 3px 8px; border-radius: 99px; font-weight: 700; }
+    .ok { background: #e7f6ee; color: var(--good); }
+    .due { background: #fff4e5; color: var(--warn); }
+    .off { background: #fdecec; color: var(--bad); }
+    .info { background: #e8eef8; color: var(--sky); }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .toolbar input, .toolbar select { width: auto; min-width: 160px; }
+    .notice {
+      background: #eef4fb;
+      border: 1px solid #d3e3f2; padding: 12px 14px; border-radius: 12px;
+      font-size: .92rem; margin-bottom: 14px; line-height: 1.55; color: #243044;
+    }
+    .pipe { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+    .stage { min-width: 170px; background: #faf7f0; border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+    .stage h4 { font-size: .75rem; color: var(--muted); margin-bottom: 8px; }
+    .chip { background: #f6f8fc; border: 1px solid var(--line); border-radius: 10px; padding: 10px 11px; font-size: .86rem; margin-bottom: 7px; }
+    .price { font-size: 1.8rem; color: var(--navy); }
+    .modules li { margin: 6px 0 6px 18px; font-size: .9rem; }
+    footer.appf { color: var(--muted); font-size: .75rem; padding: 8px 24px 20px; }
+    .bellwrap { position: relative; display: flex; gap: 8px; align-items: center; }
+    .bell {
+      width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line);
+      background: var(--paper); cursor: pointer; font-size: 1rem;
+    }
+    .badge {
+      position: absolute; top: -4px; right: -4px; background: var(--bad); color: #fff;
+      font-size: .65rem; border-radius: 99px; padding: 1px 5px; font-weight: 700;
+    }
+    .searchbox { min-width: 220px; }
+    .idcard {
+      width: 340px; height: 210px; border-radius: 16px; padding: 14px;
+      background: linear-gradient(135deg, #05060c, #4c1d95 55%, #0369a1);
+      color: #f4ead0; position: relative; overflow: hidden;
+    }
+    .idcard::after {
+      content: ""; position: absolute; right: -30px; bottom: -30px;
+      width: 120px; height: 120px; border-radius: 50%; border: 18px solid rgba(201,162,39,.25);
+    }
+    .idcard .row { display: flex; gap: 12px; align-items: center; }
+    .avatar {
+      width: 72px; height: 88px; border-radius: 8px; background: #c9a227; color: #0a1628;
+      display: grid; place-items: center; font-weight: 800; font-size: 1.4rem;
+    }
+    .report {
+      border: 8px solid #0a1628; background: #fff; padding: 18px 22px; max-width: 720px;
+    }
+    .report h1 { text-align: center; font-size: 1.1rem; letter-spacing: 1px; }
+    .report .goldline { height: 4px; background: var(--gold); margin: 8px 0 14px; }
+    .cbtq { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+    .cbtq label { font-weight: 500; margin: 6px 0; cursor: pointer; }
+    .toast {
+      position: fixed; right: 18px; bottom: 18px;
+      background: #171b28; color: #eef2f8;
+      padding: 12px 16px; border-radius: 12px; box-shadow: var(--shadow); z-index: 50;
+      border-left: 4px solid var(--sky); max-width: 320px; display: none;
+    }
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(10,22,40,.55);
+      z-index: 40; place-items: center; padding: 20px;
+    }
+    .modal.show { display: grid; }
+    .sheet {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px; padding: 22px; max-width: 720px; width: 100%; max-height: 86vh; overflow: auto;
+      box-shadow: 0 20px 50px rgba(23,27,40,.18);
+    }
+    .hold { outline: 2px solid #b42318; }
+    .nav-lab { font-size: .65rem; letter-spacing: 1.4px; color: #8d7b4a; padding: 10px 10px 4px; text-transform: uppercase; }
+    .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .pills button {
+      border: 1px solid var(--line); background: #fff;
+      border-radius: 999px;
+      padding: 8px 14px; font-size: .86rem; cursor: pointer; font-weight: 600;
+    }
+    .pills button.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .pills button:hover { border-color: var(--gold); }
+    .mini { font-size: .78rem; color: var(--muted); }
+    .hb { font-size:.72rem; padding:3px 8px; border-radius:99px; font-weight:700; }
+    .hb-Blue { background:#dbeafe; color:#1e3a8a; }
+    .hb-Red { background:#fee2e2; color:#991b1b; }
+    .hb-Green { background:#dcfce7; color:#166534; }
+    .hb-Yellow { background:#fef9c3; color:#854d0e; }
+    .wa { background:#ecfdf3; border:1px solid #86efac; border-radius:12px; padding:10px; margin-bottom:8px; font-size:.84rem; }
+    .bar { height:8px; background:#e4e9f1; border-radius:99px; overflow:hidden; min-width:80px; }
+    .bar > i { display:block; height:100%; background:linear-gradient(90deg,#6d5bd0,#2f9ad4); }
+    @media print {
+      aside, header.top, nav, .toolbar, .notice, footer.appf, .bellwrap { display: none !important; }
+      #app.open { display: block !important; }
+      .content { padding: 0; }
+      .card, .report, .idcard { box-shadow: none; }
+    }
+    @media (max-width: 980px) {
+      #loginScreen, #app.open, .grid-2, .kpis, .grid-3 { grid-template-columns: 1fr; }
+      aside { height: auto; position: relative; }
+    }
+  </style>
+</head>
+<body>
+  <section id="loginScreen">
+    <div class="hero">
+      <div>
+        <div class="crest"><img src="vcm-logo.png" alt="Vaatia College Makurdi official logo" onerror="this.src='https://vaatiacollege.com.ng/Media%20Content/vcm-logo.png'" /></div>
+        <div class="motto">Knowledge &amp; Service</div>
+        <h1>VAATIA <em>NEXUS</em></h1>
+        <p>Vaatia College Makurdi. Each officer enters <b>only their own desk</b> — Principal, VP Administration, VP Academics, Dean of Studies, Teacher, Bursary, Hostel or Parent. Desks are not combined.</p>
+        <div class="hero-stats">
+          <div class="hs"><b>360</b><span>Student capacity</span></div>
+          <div class="hs"><b>302</b><span>2025 JAMB average</span></div>
+          <div class="hs"><b>41</b><span>UTME candidates, all 242+</span></div>
+        </div>
+      </div>
+      <p style="font-size:.78rem;color:#b7a87a">Demo prototype · Session 2025/2026 · Not the official live portal</p>
+    </div>
+    <div class="login-pane">
+      <div class="login-card">
+        <h2>Choose your desk</h2>
+        <p class="sub">One role, one office. Password: <b>nexus2026</b></p>
+        <label>Email</label>
+        <input id="email" value="principal@vaatiacollege.com.ng" />
+        <label>Password</label>
+        <input id="pass" type="password" value="nexus2026" />
+        <button class="btn btn-gold" onclick="login()">Enter this desk only</button>
+        <div class="roles">
+          <button onclick="fill('principal@vaatiacollege.com.ng','Principal')">Principal</button>
+          <button onclick="fill('admin@vaatiacollege.com.ng','Admin')">Admin</button>
+          <button onclick="fill('vpadmin@vaatiacollege.com.ng','VP Admin')">VP Admin</button>
+          <button onclick="fill('academics@vaatiacollege.com.ng','VP Academics')">VP Academics</button>
+          <button onclick="fill('dean@vaatiacollege.com.ng','Dean of Studies')">Dean of Studies</button>
+          <button onclick="fill('bursar@vaatiacollege.com.ng','Bursar')">Bursar</button>
+          <button onclick="fill('hostel@vaatiacollege.com.ng','Hostel Master')">Hostel</button>
+          <button id="teachBtn" onclick="toggleTeachMenu()">Teachers ▾</button>
+          <button onclick="fill('parent@vaatiacollege.com.ng','Parent / Guardian')">Parent</button>
+        </div>
+        <div id="teachMenu" class="teach-menu">
+          <label>Teacher and subject</label>
+          <select id="teachPick"></select>
+          <button class="btn btn-gold" style="margin-top:10px" onclick="pickTeacher()">Open this teacher desk</button>
+          <p class="fine" style="margin-top:8px">Each teacher only sees the classes attached to the subject they pick.</p>
+        </div>
+        <p class="fine">Built as a sellable custom system for Vaatia operations: Basic 7–SSS 3, boarding houses, entrance CBT, acceptance &amp; commitment fees, WAEC / NECO / JAMB, sick-bay logs, and parent visibility. Sample records only.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="app">
+    <aside>
+      <div class="brand">
+        <div class="crest"><img src="vcm-logo.png" alt="Vaatia College logo" onerror="this.src='https://vaatiacollege.com.ng/Media%20Content/vcm-logo.png'" /></div>
+        <div><strong>VAATIA NEXUS</strong><small>KNOWLEDGE &amp; SERVICE</small></div>
+      </div>
+      <nav id="nav"></nav>
+      <div class="who">
+        Signed in as<br /><b id="whoName">—</b>
+        <span id="whoRole">—</span>
+        <button class="btn btn-sm btn-gold" style="margin-top:10px;width:auto" onclick="logout()">Sign out</button>
+      </div>
+    </aside>
+    <div>
+      <header class="top">
+        <div>
+          <h2 id="pageTitle">Command Centre</h2>
+          <div class="meta">Vaatia College Makurdi · 2025/2026 · First Term · <span id="liveTime"></span></div>
+        </div>
+        <div class="bellwrap">
+          <input class="searchbox" id="omni" placeholder="Find student, receipt, house…" onkeydown="if(event.key==='Enter')omniGo()" />
+          <button class="btn btn-ghost btn-sm" onclick="omniGo()">Search</button>
+          <button class="bell" title="Alerts" onclick="show('messages')">🔔</button>
+          <span class="badge" id="nCount">5</span>
+        </div>
+      </header>
+      <div class="content" id="view"></div>
+      <div class="toast" id="toast"></div>
+      <div class="modal" id="modal" onclick="if(event.target.id==='modal')closeModal()">
+        <div class="sheet" id="sheet"></div>
+      </div>
+      <footer class="appf">VAATIA NEXUS prototype · Motto: Knowledge &amp; Service · Address: No. 8 Chia Ikima Street, Off Sen. George Akume Way, Makurdi, Benue · P.O. Box 1354</footer>
+    </div>
+  </section>
+
+<script>
+const USERS = {
+  "principal@vaatiacollege.com.ng": { name: "Mr. T.O. Vaatia", role: "Principal", access: "all" },
+  "admin@vaatiacollege.com.ng": { name: "College Admin", role: "Admin · Class monitor", access: "admin" },
+  "vpadmin@vaatiacollege.com.ng": { name: "Mr. M.C. Itodo", role: "Vice Principal Administration", access: "vpadmin" },
+  "academics@vaatiacollege.com.ng": { name: "Mr. S.T. Dzapine", role: "Vice Principal Academics", access: "acad" },
+  "dean@vaatiacollege.com.ng": { name: "Mr. O. Pius", role: "Dean of Studies", access: "dean" },
+  "bursar@vaatiacollege.com.ng": { name: "Bursary Office", role: "Bursar", access: "fee" },
+  "hostel@vaatiacollege.com.ng": { name: "House System", role: "Hostel Master", access: "host" },
+  "teacher@vaatiacollege.com.ng": { name: "Mr. T.T. Tyohuna", role: "HOD Mathematics & Computer Science", access: "teach" },
+  "parent@vaatiacollege.com.ng": { name: "Mrs. M. Terhemba", role: "Parent — Terhemba Doose (SSS 2)", access: "parent" }
+};
+
+const DESK_NAV = {
+  all: [
+    ["dash", "Command Centre"]
+  ],
+  admin: [
+    ["monitor", "Class monitor"]
+  ],
+  vpadmin: [
+    ["vpadmin", "VP Administration desk"]
+  ],
+  acad: [
+    ["vpacad", "Academics desk"]
+  ],
+  dean: [
+    ["dostudies", "Dean of Studies desk"]
+  ],
+  teach: [
+    ["teacherdesk", "My teaching desk"]
+  ],
+  fee: [
+    ["fees", "Bursary desk"]
+  ],
+  host: [
+    ["hostel", "Boarding houses"],
+    ["exeat", "Exeats"],
+    ["kitchen", "Kitchen"]
+  ],
+  parent: [
+    ["parentv", "My ward"]
+  ]
+};
+const HOME = { all:"dash", admin:"monitor", vpadmin:"vpadmin", acad:"vpacad", dean:"dostudies", teach:"teacherdesk", fee:"fees", host:"hostel", parent:"parentv" };
+const NAV = Object.values(DESK_NAV).flat().concat([
+  ["students", "Student Registry"],
+  ["dossier", "Student 360"],
+  ["academics", "Academics & Results"],
+  ["reportcard", "Report Cards"],
+  ["cbt", "CBT Arena"],
+  ["attendance", "Attendance"],
+  ["discipline", "Dean of Discipline"],
+  ["clinic", "Sick Bay"],
+  ["gate", "Gate & Security"],
+  ["library", "Library"],
+  ["store", "Kit & Store"],
+  ["staff", "Staff & Departments"],
+  ["timetable", "Timetable"],
+  ["calendar", "Term Calendar"],
+  ["messages", "Parent Messages"],
+  ["ids", "ID Cards"],
+  ["audit", "Audit & NDPR"],
+  ["proposal", "Commercial Proposal"]
+]);
+
+const STUDENTS = [
+  { id:"VCM/25/0142", name:"Terhemba Doose", cls:"SSS 2 Science", house:"Akume House", sex:"F", state:"Benue", fee:"Paid", att:98, jamb:"—", status:"Boarding" },
+  { id:"VCM/25/0088", name:"Aondohemba David", cls:"SSS 3 Science", house:"Unity House", sex:"M", state:"Benue", fee:"Part", att:96, jamb:"328", status:"Boarding" },
+  { id:"VCM/25/0211", name:"Mlumun Faith", cls:"JSS 3", house:"Service House", sex:"F", state:"Benue", fee:"Paid", att:99, jamb:"—", status:"Boarding" },
+  { id:"VCM/24/0034", name:"Shagba Emmanuel", cls:"SSS 3 Arts", house:"Integrity House", sex:"M", state:"Nasarawa", fee:"Paid", att:94, jamb:"301", status:"Boarding" },
+  { id:"VCM/25/0177", name:"Eyioma Zion", cls:"JSS 2", house:"Akume House", sex:"F", state:"FCT", fee:"Due", att:97, jamb:"—", status:"Boarding" },
+  { id:"VCM/23/0019", name:"Sedoo Terfa", cls:"SSS 1 Science", house:"Excellence House", sex:"F", state:"Benue", fee:"Paid", att:100, jamb:"—", status:"Boarding" },
+  { id:"VCM/25/0250", name:"Kwaghgba Peter", cls:"JSS 1 / Basic 7", house:"Unity House", sex:"M", state:"Benue", fee:"Paid", att:95, jamb:"—", status:"Boarding" },
+  { id:"VCM/24/0112", name:"Nguhemen Ruth", cls:"SSS 2 Arts", house:"Service House", sex:"F", state:"Benue", fee:"Paid", att:93, jamb:"—", status:"Day request" }
+];
+
+const APPS = [
+  { name:"Ortese Blessing", cls:"Basic 7", stage:"CBT scored", score:"72%", centre:"Makurdi campus" },
+  { name:"Iornumbe Caleb", cls:"SSS 1", stage:"Offer sent", score:"81%", centre:"Makurdi campus" },
+  { name:"Ada Ene", cls:"Basic 8", stage:"Documents", score:"—", centre:"Jahi, Abuja" },
+  { name:"Terna Joseph", cls:"Basic 7", stage:"Application fee", score:"—", centre:"Makurdi campus" },
+  { name:"Ngohile Mary", cls:"Basic 7", stage:"Acceptance", score:"78%", centre:"Makurdi campus" },
+  { name:"Uchechi Daniel", cls:"SSS 1", stage:"Medical form", score:"84%", centre:"Jahi, Abuja" }
+];
+
+const CLASS_LIST = ["JSS 1A","JSS 1B","JSS 2A","JSS 2B","JSS 3A","JSS 3B","SSS 1A","SSS 1B","SSS 2A","SSS 2B","SSS 3A","SSS 3B"];
+const NEXT_CLASS = {
+  "JSS 1A":"JSS 2A","JSS 1B":"JSS 2B","JSS 2A":"JSS 3A","JSS 2B":"JSS 3B",
+  "JSS 3A":"SSS 1A","JSS 3B":"SSS 1B","SSS 1A":"SSS 2A","SSS 1B":"SSS 2B",
+  "SSS 2A":"SSS 3A","SSS 2B":"SSS 3B","SSS 3A":"Alumni","SSS 3B":"Alumni"
+};
+const HOUSES = ["Akume House","Unity House","Service House","Integrity House","Excellence House"];
+const GIVEN = ["Ada","Blessing","Caleb","Doose","Emmanuel","Faith","Grace","Hembafan","Iornumbe","Joseph","Kwaghgba","Lydia","Mlumun","Ngohile","Ortese","Peter","Ruth","Sedoo","Terhemba","Uchechi","Victor","Wuese","Yange","Zion"];
+const FAMILY = ["Abah","Aondo","Doki","Ene","Iorbee","Kwagh","Nyikwagh","Ortese","Shagba","Terhemba","Tyokase","Ugba","Vange","Waya"];
+const JSS_SUBS = ["English Language","Mathematics","Basic Science","Basic Technology","Civic Education","Social Studies"];
+const SSS_SUBS = ["English Language","Mathematics","Physics","Chemistry","Biology","Civic Education"];
+
+function hash(n){ return Math.abs(Math.sin(n*999)*10000) % 1; }
+function buildBaseRoll(){
+  const rows = [];
+  CLASS_LIST.forEach((cls, ci) => {
+    for (let i=0;i<5;i++){
+      const n = ci*5+i;
+      const name = GIVEN[n % GIVEN.length] + " " + FAMILY[(n*3) % FAMILY.length];
+      const id = "VCM/" + (26-Math.floor(ci/2)) + "/" + String(1000+n).slice(1);
+      const att = 88 + Math.floor(hash(n+3)*12);
+      const feeRoll = hash(n+7);
+      const fee = feeRoll>0.82 ? "Due" : feeRoll>0.62 ? "Part" : "Paid";
+      const billed = 560000;
+      const paid = fee==="Paid"?billed:fee==="Part"?Math.round(billed*0.55):0;
+      const subs = cls.startsWith("SSS") ? SSS_SUBS : JSS_SUBS;
+      const mk = (seed) => {
+        const ca1 = 6 + Math.floor(hash(seed)*5);
+        const ca2 = 6 + Math.floor(hash(seed+1)*5);
+        const ca3 = 6 + Math.floor(hash(seed+2)*5);
+        const exam = 42 + Math.floor(hash(seed+3)*26);
+        const ca = ca1 + ca2 + ca3;
+        return { ca1, ca2, ca3, ca, exam, total: Math.min(100, ca + exam) };
+      };
+      const termNow = subs.map((s,si) => ({ subject:s, ...mk(n*10+si) }));
+      const termPrev = subs.map((s,si) => ({ subject:s, ...mk(n*10+si+40) }));
+      const termOld = subs.map((s,si) => ({ subject:s, ...mk(n*10+si+80) }));
+      const avg = arr => Math.round(arr.reduce((a,b)=>a+b.total,0)/arr.length);
+      const disc = hash(n+11)>0.78 ? [{ date:"18 Aug 2026", note:"Late to morning prep", action:"House warning", open:true }] : [];
+      rows.push({
+        id, name, cls, house: HOUSES[n%5],
+        sex: n%2?"F":"M", state: n%5===0?"FCT":n%4===0?"Nasarawa":"Benue",
+        fee, billed, paid, att,
+        present: Math.round(22*att/100), sessions: 22,
+        status: "Boarding",
+        terms: [
+          { label:"2024/2025 Third Term", scores: termOld, avg: avg(termOld) },
+          { label:"2025/2026 First Term", scores: termPrev, avg: avg(termPrev) },
+          { label:"2025/2026 Second Term (current)", scores: termNow, avg: avg(termNow), current:true }
+        ],
+        discipline: disc,
+        history: []
+      });
+    }
+  });
+  return rows;
+}
+let ROLL = JSON.parse(JSON.stringify(buildBaseRoll()));
+(function loadRoll(){
+  try {
+    const saved = JSON.parse(localStorage.getItem("vcm_roll_v1")||"null");
+    if (saved && Array.isArray(saved.moves)) {
+      saved.moves.forEach(m => {
+        const s = ROLL.find(r => r.id===m.id);
+        if (s) { s.history.push({ from:s.cls, to:m.to, when:m.when, by:m.by }); s.cls = m.to; }
+      });
+    }
+  } catch(e){}
+})();
+function saveMoves(){
+  const moves = [];
+  ROLL.forEach(s => s.history.forEach(h => moves.push({ id:s.id, to:h.to, when:h.when, by:h.by })));
+  localStorage.setItem("vcm_roll_v1", JSON.stringify({ moves }));
+}
+
+let currentClass = "JSS 1A";
+let current = null;
+let vpTab = "sundry";
+
+function phoneFrom(str, salt){
+  let n = salt;
+  for (let i=0;i<str.length;i++) n += str.charCodeAt(i)*(i+7);
+  return "0803" + String(10000000 + Math.abs(Math.floor(Math.sin(n)*1e9)) % 90000000).slice(0,7);
+}
+function surnameOf(name){ return (name||"").trim().split(/\s+/).slice(-1)[0]; }
+function parentRecord(surname, ward){
+  return {
+    surname,
+    title: "Mr. & Mrs. " + surname,
+    phone: phoneFrom(surname, 11),
+    whatsapp: phoneFrom(surname, 29),
+    ward: ward || ""
+  };
+}
+function parentsIndex(){
+  const map = {};
+  ROLL.forEach(s => {
+    const sn = surnameOf(s.name);
+    if (!map[sn]) map[sn] = parentRecord(sn, s.name);
+    else map[sn].ward += ", " + s.name;
+  });
+  return Object.values(map).sort((a,b)=>a.surname.localeCompare(b.surname));
+}
+function lookupParents(sn){
+  const q = (sn||"").trim().toLowerCase();
+  if (q.length<2) return [];
+  return ROLL.filter(s => surnameOf(s.name).toLowerCase().startsWith(q) || s.name.toLowerCase().includes(q))
+    .map(s => ({ student:s, parent: parentRecord(surnameOf(s.name), s.name) }));
+}
+
+const VP_STAFF_SEED = [
+  { name:"Mr. T.O. Vaatia", post:"Principal", bank:"Access Bank", acct:"0046856732", salary:850000 },
+  { name:"Mr. M.C. Itodo", post:"Vice Principal Administration", bank:"UBA", acct:"1029384756", salary:620000 },
+  { name:"Mr. S.T. Dzapine", post:"Vice Principal Academics", bank:"Zenith", acct:"2088173645", salary:620000 },
+  { name:"Mr. A. Shawon", post:"Dean of Discipline", bank:"GTBank", acct:"0149283746", salary:410000 },
+  { name:"Mr. O. Pius", post:"Dean of Studies", bank:"First Bank", acct:"3091827364", salary:400000 },
+  { name:"Mr. E.A. Otache", post:"HOD Science & Technology", bank:"Access Bank", acct:"0056172839", salary:360000 },
+  { name:"Mrs. V.U. Mashika", post:"HOD Languages", bank:"UBA", acct:"1027465198", salary:360000 },
+  { name:"Mr. T.T. Tyohuna", post:"HOD Mathematics & Computer Science", bank:"Zenith", acct:"2081937465", salary:360000 },
+  { name:"Mr. S. Takor", post:"HOD Arts & Social Sciences", bank:"GTBank", acct:"0156372819", salary:350000 },
+  { name:"Mr. E.T. Nyigba", post:"Chief Security Officer", bank:"First Bank", acct:"3019283746", salary:280000 },
+  { name:"Mrs. R. Iorbee", post:"College Nurse", bank:"Access Bank", acct:"0061827394", salary:260000 },
+  { name:"Mr. P. Kwagh", post:"Boarding Supervisor", bank:"UBA", acct:"1038495761", salary:240000 }
+];
+function defaultVP(){
+  return {
+    expenses: [
+      { student:"Ada Abah", id:"VCM/26/0000", item:"Lab coat replacement", cost:4500, when:"28 Aug 2026" }
+    ],
+    staff: VP_STAFF_SEED.map(s => Object.assign({}, s)),
+    events: [
+      { title:"SS 3 Graduation & Prize Day", date:"2026-07-18", time:"10:00", place:"College hall", note:"Gowns, guest chairs, parent seating", status:"Planning" },
+      { title:"Inter-house sports finals", date:"2026-09-19", time:"08:00", place:"Sports field", note:"Blue, Red, Green, Yellow houses", status:"Scheduled" }
+    ],
+    medical: [],
+    wa: [
+      { who:"VP Admin", text:"Good morning colleagues. Visiting-day roster is on the notice board.", at:"Yesterday 18:12" }
+    ],
+    inbox: []
+  };
+}
+let VP = defaultVP();
+(function loadVP(){
+  try {
+    const raw = JSON.parse(localStorage.getItem("vcm_vp_v1")||"null");
+    if (raw) {
+      VP.expenses = raw.expenses || VP.expenses;
+      VP.staff = raw.staff || VP.staff;
+      VP.events = raw.events || VP.events;
+      VP.medical = raw.medical || VP.medical;
+      VP.wa = raw.wa || VP.wa;
+      VP.inbox = raw.inbox || [];
+    }
+    const posted = JSON.parse(localStorage.getItem("vcm_posted_v1")||"[]");
+    posted.forEach(s => { if (!ROLL.some(r => r.id===s.id)) ROLL.push(s); });
+  } catch(e){}
+})();
+function saveVP(){ localStorage.setItem("vcm_vp_v1", JSON.stringify(VP)); }
+function savePosted(){
+  localStorage.setItem("vcm_posted_v1", JSON.stringify(ROLL.filter(s => s.posted)));
+}
+
+let pendingTeach = { teacher:"Mr. T.T. Tyohuna", subject:"Mathematics" };
+function fill(e){
+  document.getElementById("email").value = e;
+  const menu = document.getElementById("teachMenu");
+  const btn = document.getElementById("teachBtn");
+  if (menu && !String(e).includes("teacher@")) {
+    menu.classList.remove("show");
+    if (btn) btn.classList.remove("open");
+  }
+}
+function toggleTeachMenu(){
+  fill("teacher@vaatiacollege.com.ng");
+  const menu = document.getElementById("teachMenu");
+  const btn = document.getElementById("teachBtn");
+  if (!menu) return;
+  menu.classList.toggle("show");
+  if (btn) btn.classList.toggle("open", menu.classList.contains("show"));
+  fillTeachSelect();
+}
+function fillTeachSelect(){
+  const sel = document.getElementById("teachPick");
+  if (!sel || typeof TEACHING_LOAD === "undefined") return;
+  sel.innerHTML = TEACHING_LOAD.map(t =>
+    `<option value="${t.teacher}||${t.subject}">${t.teacher} — ${t.subject}</option>`
+  ).join("");
+}
+function pickTeacher(){
+  const sel = document.getElementById("teachPick");
+  if (!sel || !sel.value) return;
+  const [teacher, subject] = sel.value.split("||");
+  pendingTeach = { teacher, subject };
+  teachPairKey = teacher + "||" + subject;
+  fill("teacher@vaatiacollege.com.ng");
+  document.getElementById("pass").value = "nexus2026";
+  login();
+}
+function login(){
+  const e = document.getElementById("email").value.trim().toLowerCase();
+  const p = document.getElementById("pass").value;
+  if (p !== "nexus2026" || !USERS[e]) { alert("Use a demo role and password nexus2026"); return; }
+  current = { email:e, ...USERS[e] };
+  if (current.access === "teach" && pendingTeach.teacher) {
+    current.name = pendingTeach.teacher;
+    current.role = "Subject teacher — " + pendingTeach.subject;
+    teachPairKey = pendingTeach.teacher + "||" + pendingTeach.subject;
+  }
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("app").classList.add("open");
+  document.getElementById("whoName").textContent = current.name;
+  document.getElementById("whoRole").textContent = current.role;
+  buildNav();
+  show(HOME[current.access] || "dash");
+}
+function logout(){
+  current = null;
+  document.getElementById("app").classList.remove("open");
+  document.getElementById("loginScreen").style.display = "grid";
+}
+function deskNav(){
+  return (current && DESK_NAV[current.access]) || DESK_NAV.all;
+}
+function buildNav(){
+  document.getElementById("nav").innerHTML = deskNav().map(([id,label]) =>
+    `<button data-id="${id}" onclick="show('${id}')">${label}</button>`
+  ).join("");
+}
+function show(id){
+  const allowed = deskNav().map(n => n[0]);
+  if (current && allowed.length && id && !allowed.includes(id)) {
+    id = HOME[current.access] || allowed[0];
+  }
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b.dataset.id===id));
+  const item = NAV.find(n => n[0]===id) || deskNav().find(n => n[0]===id);
+  if (item) document.getElementById("pageTitle").textContent = item[1];
+  const views = {
+    dash, monitor, vpadmin, vpacad, dostudies, teacherdesk, admit, students, dossier, academics, reportcard, exams, cbt, attendance,
+    fees, hostel, exeat, kitchen, discipline, clinic, gate, library, store,
+    staff, timetable, calendar, alumni, messages, ids, audit, comms, parentv, proposal
+  };
+  document.getElementById("view").innerHTML = views[id]();
+}
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 2800);
+}
+function openModal(html){ document.getElementById("sheet").innerHTML = html; document.getElementById("modal").classList.add("show"); }
+function closeModal(){ document.getElementById("modal").classList.remove("show"); }
+function omniGo(){
+  const q = (document.getElementById("omni").value||"").toLowerCase();
+  if (!q) return;
+  const hit = ROLL.find(s => (s.name+s.id+s.house+s.cls).toLowerCase().includes(q))
+    || STUDENTS.find(s => (s.name+s.id+s.house+s.cls).toLowerCase().includes(q));
+  if (hit && hit.terms) { currentClass = hit.cls; show("monitor"); setTimeout(()=>openFile(hit.id), 80); toast("Opened file for " + hit.name); }
+  else if (hit) { show("dossier"); setTimeout(() => pickStudent(hit.id), 50); toast("Opened file for " + hit.name); }
+  else if (q.includes("fee") || q.includes("receipt")) show("fees");
+  else if (q.includes("jamb") || q.includes("waec")) show("exams");
+  else toast("No exact match — try a student name or VCM/25/…");
+}
+setInterval(() => {
+  const el = document.getElementById("liveTime");
+  if (el) el.textContent = new Date().toLocaleString("en-NG", { hour12:true });
+}, 1000);
+
+function dash(){
+  return `
+    <div class="notice"><b>Session pulse.</b> First Term 2025/2026. Entrance window for 2026/2027 uses parents.vaatiacollege.com.ng (₦10,000 form). Exam centres: Makurdi campus and Care &amp; Cuddles School, Jahi, FCT. Search any student from the top bar.</div>
+    <div class="kpis">
+      <div class="kpi"><span>On roll</span><b>348</b><em>of 360 capacity</em></div>
+      <div class="kpi"><span>Fee collection</span><b>₦186.4m</b><em>91% of billed term</em></div>
+      <div class="kpi"><span>Class attendance</span><b>96.8%</b><em>this week</em></div>
+      <div class="kpi"><span>Hostel occupancy</span><b>312</b><em>5 houses live</em></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>2025 JAMB UTME — published college outcome</h3>
+        <table>
+          <tr><th>Metric</th><th>Result</th></tr>
+          <tr><td>Candidates</td><td>41</td></tr>
+          <tr><td>Lowest score</td><td>242 and above — every candidate</td></tr>
+          <tr><td>300 and above</td><td>19 students (46.3%)</td></tr>
+          <tr><td>College average</td><td>302</td></tr>
+          <tr><td>Best score</td><td>361</td></tr>
+        </table>
+        <p class="fine" style="margin-top:8px">Captured so management can brief parents and track university placement against the college vision: competitive skills, positive attitudes, strong moral values.</p>
+      </div>
+      <div class="card">
+        <h3>Management desk</h3>
+        <table>
+          <tr><td>Principal</td><td>Mr. T.O. Vaatia</td></tr>
+          <tr><td>VP Administration</td><td>Mr. M.C. Itodo</td></tr>
+          <tr><td>VP Academics</td><td>Mr. S.T. Dzapine</td></tr>
+          <tr><td>Dean of Discipline</td><td>Mr. A. Shawon</td></tr>
+          <tr><td>Dean of Studies</td><td>Mr. O. Pius</td></tr>
+          <tr><td>HOD Science &amp; Tech</td><td>Mr. E.A. Otache</td></tr>
+          <tr><td>HOD Languages</td><td>Mrs. V.U. Mashika</td></tr>
+          <tr><td>HOD Maths &amp; Comp.</td><td>Mr. T.T. Tyohuna</td></tr>
+          <tr><td>HOD Arts &amp; Soc. Sci.</td><td>Mr. S. Takor</td></tr>
+          <tr><td>Chief Security Officer</td><td>Mr. E.T. Nyigba</td></tr>
+          <tr><td>School Manager</td><td>Tavershima Vaatia</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card"><h3>Today</h3><p>Lights-out roll: 312 / 312 present.<br/>Sick bay: 4 reviewed, all discharged to class.<br/>Two circulars pending Principal sign-off.</p></div>
+      <div class="card"><h3>Academics</h3><p>CA3 window opens Monday (last 10 of the 30% CAs).<br/>SSS 3 mock timetable locked.<br/>Robotics lab booking: 3 slots free.</p></div>
+      <div class="card"><h3>Admissions 2026/2027</h3><p>Forms: ₦10,000.<br/>Centres: Makurdi + Jahi Abuja.<br/>Pipeline: 86 active applications.</p></div>
+    </div>
+    <div class="card">
+      <h3>Why a Board does not walk away</h3>
+      <div class="grid-3">
+        <div><b>Result hold</b><p class="fine">Unpaid fees freeze report cards and parent release.</p></div>
+        <div><b>Pickup PIN</b><p class="fine">Gate will not release a boarder without the day’s code.</p></div>
+        <div><b>WhatsApp-first</b><p class="fine">Menu, visiting day, and fee notes where parents already live.</p></div>
+        <div><b>CBT in-house</b><p class="fine">Entrance and JAMB mocks mark themselves.</p></div>
+        <div><b>Print factory</b><p class="fine">ID cards, report cards, exeat passes — one click.</p></div>
+        <div><b>Audit trail</b><p class="fine">Who opened a clinic file, and when.</p></div>
+      </div>
+    </div>`;
+}
+
+function admit(){
+  const stages = ["Application fee","Registration","Documents","CBT scored","Offer sent","Acceptance","Medical form","Commitment fee","School fees"];
+  const grouped = {};
+  stages.forEach(s => grouped[s]=[]);
+  APPS.forEach(a => (grouped[a.stage]||(grouped[a.stage]=[])).push(a));
+  return `
+    <div class="notice">Mirrors the live VCM parent flow: pay form → register → documents → CBT → offer → acceptance / undertaking → medical records → commitment fee → school fees. Contacts used by the college: admissions@vaatiacollege.com.ng</div>
+    <div class="toolbar">
+      <input placeholder="Search applicant" />
+      <select><option>All classes</option><option>Basic 7</option><option>Basic 8</option><option>SSS 1</option></select>
+      <button class="btn btn-navy btn-sm">New application</button>
+    </div>
+    <div class="pipe">
+      ${stages.map(s => `<div class="stage"><h4>${s} · ${(grouped[s]||[]).length}</h4>${(grouped[s]||[]).map(a=>`<div class="chip"><b>${a.name}</b><br/>${a.cls} · ${a.centre}<br/>${a.score}</div>`).join("")||"<div class='fine'>None</div>"}</div>`).join("")}
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>Entrance operations</h3>
+      <p>Application fee ₦10,000. Required: active email, passport photograph, birth certificate. Examination centres: Vaatia College, Off Sen. George Akume Way, Makurdi; Care and Cuddles School, Plot 1507, Jahi District, FCT Abuja.</p>
+    </div>`;
+}
+
+function students(){
+  return `
+    <div class="toolbar">
+      <input id="qStu" placeholder="Search name or admission no." oninput="filterStu()" />
+      <select><option>All classes</option><option>JSS 1 / Basic 7</option><option>JSS 2</option><option>JSS 3</option><option>SSS 1</option><option>SSS 2</option><option>SSS 3</option></select>
+      <button class="btn btn-navy btn-sm">Add student</button>
+      <button class="btn btn-ghost btn-sm">Export register</button>
+    </div>
+    <div class="card">
+      <table id="stuTable">
+        <thead><tr><th>Adm. No</th><th>Name</th><th>Class</th><th>House</th><th>State</th><th>Fees</th><th>Att.</th><th>Status</th></tr></thead>
+        <tbody>${STUDENTS.map(rowStu).join("")}</tbody>
+      </table>
+    </div>`;
+}
+function rowStu(s){
+  const fee = s.fee==="Paid"?"ok":s.fee==="Part"?"due":"off";
+  return `<tr><td>${s.id}</td><td>${s.name}</td><td>${s.cls}</td><td>${s.house}</td><td>${s.state}</td><td><span class="tag ${fee}">${s.fee}</span></td><td>${s.att}%</td><td>${s.status}</td></tr>`;
+}
+function filterStu(){
+  const q = (document.getElementById("qStu").value||"").toLowerCase();
+  document.querySelector("#stuTable tbody").innerHTML = STUDENTS.filter(s => (s.name+s.id+s.cls).toLowerCase().includes(q)).map(rowStu).join("");
+}
+
+const SKILL_VENUES = [
+  "Robotics & ICT Centre",
+  "Science Laboratory",
+  "Technical / Electrical Workshop",
+  "Agricultural Science Farm",
+  "Home Economics Kitchen",
+  "Fine Art & Craft Studio",
+  "Woodwork Shop",
+  "Fashion & Tailoring Room"
+];
+const CLUBS = [
+  "Literary & Debating",
+  "Science Club",
+  "Mathematics Club",
+  "Press Club",
+  "JET / STEM Club",
+  "Robotics Club",
+  "Drama & Music",
+  "Red Cross",
+  "Athletics & Sports",
+  "Chapel / Scripture Union",
+  "Environmental Club"
+];
+let vaTab = "results";
+let VA = { skills:[], clubs:[] };
+(function loadVA(){
+  try {
+    const raw = JSON.parse(localStorage.getItem("vcm_va_v1")||"null");
+    if (raw) { VA.skills = raw.skills||[]; VA.clubs = raw.clubs||[]; }
+  } catch(e){}
+})();
+function saveVA(){ localStorage.setItem("vcm_va_v1", JSON.stringify(VA)); }
+function curTerm(s){ return (s.terms||[]).find(t=>t.current) || (s.terms||[])[(s.terms||[]).length-1] || { avg:0, scores:[] }; }
+function prevTerm(s){ const p=(s.terms||[]).filter(t=>!t.current); return p[p.length-1] || { avg:0 }; }
+
+const JSS_ARMS = ["JSS 1A","JSS 1B","JSS 2A","JSS 2B","JSS 3A","JSS 3B"];
+const SSS_ARMS = ["SSS 1A","SSS 1B","SSS 2A","SSS 2B","SSS 3A","SSS 3B"];
+const TEACHING_LOAD = [
+  { teacher:"Mr. S. Takor", subject:"Business Studies", classes:["JSS 1A","JSS 1B","JSS 2A","JSS 2B"] },
+  { teacher:"Mr. S. Takor", subject:"Economics", classes:["SSS 1A","SSS 1B"] },
+  { teacher:"Mr. T.T. Tyohuna", subject:"Mathematics", classes:CLASS_LIST.slice() },
+  { teacher:"Mr. T.T. Tyohuna", subject:"Basic Technology", classes:["JSS 1A","JSS 1B","JSS 2A","JSS 2B","JSS 3A","JSS 3B"] },
+  { teacher:"Mrs. V.U. Mashika", subject:"English Language", classes:CLASS_LIST.slice() },
+  { teacher:"Mr. E.A. Otache", subject:"Basic Science", classes:["JSS 1A","JSS 1B","JSS 2A","JSS 2B","JSS 3A","JSS 3B"] },
+  { teacher:"Mr. E.A. Otache", subject:"Physics", classes:["SSS 1A","SSS 1B","SSS 2A","SSS 2B","SSS 3A","SSS 3B"] },
+  { teacher:"Mr. E.A. Otache", subject:"Chemistry", classes:["SSS 1A","SSS 1B","SSS 2A","SSS 2B","SSS 3A","SSS 3B"] },
+  { teacher:"Mr. O. Pius", subject:"Civic Education", classes:CLASS_LIST.slice() },
+  { teacher:"Mr. A. Shawon", subject:"Social Studies", classes:["JSS 1A","JSS 1B","JSS 2A","JSS 2B","JSS 3A","JSS 3B"] },
+  { teacher:"Mrs. R. Iorbee", subject:"Biology", classes:["SSS 1A","SSS 1B","SSS 2A","SSS 2B","SSS 3A","SSS 3B"] }
+];
+let dosTab = "teacher";
+let DOS = { issues:[] };
+(function loadDOS(){
+  try {
+    const raw = JSON.parse(localStorage.getItem("vcm_dos_v1")||"null");
+    if (raw && raw.issues) DOS.issues = raw.issues;
+  } catch(e){}
+})();
+function saveDOS(){ localStorage.setItem("vcm_dos_v1", JSON.stringify(DOS)); }
+function mkScore(seed){
+  const ca1 = 6 + Math.floor(hash(seed)*5);
+  const ca2 = 6 + Math.floor(hash(seed+1)*5);
+  const ca3 = 6 + Math.floor(hash(seed+2)*5);
+  const exam = 42 + Math.floor(hash(seed+3)*26);
+  const ca = ca1+ca2+ca3;
+  return { ca1, ca2, ca3, ca, exam, total: Math.min(100, ca+exam) };
+}
+function ensureSubject(student, subject){
+  (student.terms||[]).forEach((t,ti) => {
+    t.scores = t.scores || [];
+    if (!t.scores.some(x => x.subject===subject)) {
+      let seed = subject.length*9 + ti*13;
+      for (let i=0;i<(student.id||"").length;i++) seed += student.id.charCodeAt(i);
+      t.scores.push({ subject, ...mkScore(seed) });
+      t.avg = Math.round(t.scores.reduce((a,b)=>a+(b.total||0),0)/t.scores.length);
+    }
+  });
+}
+function loadPair(key){
+  const [teacher, subject] = (key||"").split("||");
+  return TEACHING_LOAD.find(t => t.teacher===teacher && t.subject===subject) || TEACHING_LOAD[0];
+}
+
+let teachTab = "scores";
+let teachPairKey = "";
+let TD = { attendance:{}, gclass:{}, maintain:[], sundry:[] };
+(function loadTD(){
+  try {
+    const raw = JSON.parse(localStorage.getItem("vcm_td_v1")||"null");
+    if (raw) {
+      TD.attendance = raw.attendance || {};
+      TD.gclass = raw.gclass || {};
+      TD.maintain = raw.maintain || [];
+      TD.sundry = raw.sundry || [];
+    }
+  } catch(e){}
+})();
+function saveTD(){ localStorage.setItem("vcm_td_v1", JSON.stringify(TD)); }
+function teacherName(){
+  return (current && current.name) || "Mr. T.T. Tyohuna";
+}
+function myLoad(){
+  const n = teacherName();
+  const mine = TEACHING_LOAD.filter(t => t.teacher===n);
+  return mine.length ? mine : TEACHING_LOAD.filter(t => t.teacher==="Mr. T.T. Tyohuna");
+}
+function currentPair(){
+  const load = myLoad();
+  const key = teachPairKey || (load[0].teacher+"||"+load[0].subject);
+  return TEACHING_LOAD.find(t => t.teacher+"||"+t.subject===key) || load[0];
+}
+function attKey(cls, subject){ return cls+"|"+subject; }
+
+function teacherdesk(){
+  const load = myLoad();
+  const pair = currentPair();
+  const tabs = [
+    ["scores","Input scores"],
+    ["attend","Attendance"],
+    ["room","Classroom & sundry"],
+    ["gclass","Google Classroom"]
+  ];
+  return `
+    <div class="notice"><b>Teacher desk — ${teacherName()}.</b> Enter CA and exam scores for the classes you teach, mark attendance (old days stay, a new sheet opens after each save), send classroom repairs and class sundry to the VPs, and open Google Classroom for notes.</div>
+    <div class="toolbar">
+      <select onchange="teachPairKey=this.value;show('teacherdesk')">
+        ${load.map(t=>`<option value="${t.teacher}||${t.subject}" ${t.teacher===pair.teacher&&t.subject===pair.subject?"selected":""}>${t.subject}</option>`).join("")}
+      </select>
+      <span class="mini">Classes on this subject: ${pair.classes.join(", ")}</span>
+    </div>
+    <div class="pills">
+      ${tabs.map(([id,l])=>`<button class="${teachTab===id?"on":""}" onclick="teachTab='${id}';show('teacherdesk')">${l}</button>`).join("")}
+    </div>
+    ${teachTab==="scores"?tdScores(pair):""}
+    ${teachTab==="attend"?tdAttend(pair):""}
+    ${teachTab==="room"?tdRoom(pair):""}
+    ${teachTab==="gclass"?tdGclass(pair):""}
+  `;
+}
+function tdScores(pair){
+  const cls = (document.getElementById("tdCls")||{}).value || pair.classes[0];
+  const safeCls = pair.classes.includes(cls) ? cls : pair.classes[0];
+  ROLL.filter(s=>s.cls===safeCls).forEach(s => ensureSubject(s, pair.subject));
+  const list = ROLL.filter(s=>s.cls===safeCls).sort((a,b)=>a.name.localeCompare(b.name));
+  return `
+    <div class="toolbar">
+      <select id="tdCls" onchange="show('teacherdesk')">
+        ${pair.classes.map(c=>`<option ${c===safeCls?"selected":""}>${c}</option>`).join("")}
+      </select>
+      <span class="mini">${pair.subject} · CA1+CA2+CA3 = 30 · Exam = 70</span>
+      <button class="btn btn-navy btn-sm" onclick="saveTeachScores('${pair.subject}','${safeCls}')">Save this class</button>
+    </div>
+    <div class="card">
+      <table>
+        <tr><th>Adm. No</th><th>Student</th><th>CA1 /10</th><th>CA2 /10</th><th>CA3 /10</th><th>Exam /70</th><th>Total</th></tr>
+        ${list.map(s=>{
+          const sc=(curTerm(s).scores||[]).find(x=>x.subject===pair.subject)||{ca1:0,ca2:0,ca3:0,exam:0,total:0};
+          return `<tr>
+            <td>${s.id}</td><td>${s.name}</td>
+            <td><input data-sid="${s.id}" data-f="ca1" type="number" min="0" max="10" value="${sc.ca1}" style="width:70px" /></td>
+            <td><input data-sid="${s.id}" data-f="ca2" type="number" min="0" max="10" value="${sc.ca2}" style="width:70px" /></td>
+            <td><input data-sid="${s.id}" data-f="ca3" type="number" min="0" max="10" value="${sc.ca3}" style="width:70px" /></td>
+            <td><input data-sid="${s.id}" data-f="exam" type="number" min="0" max="70" value="${sc.exam}" style="width:80px" /></td>
+            <td><b>${sc.total}</b></td>
+          </tr>`;
+        }).join("")}
+      </table>
+    </div>`;
+}
+function saveTeachScores(subject, cls){
+  document.querySelectorAll("#view input[data-sid]").forEach(inp => {
+    const s = ROLL.find(r => r.id===inp.dataset.sid);
+    if (!s) return;
+    ensureSubject(s, subject);
+    const sc = (curTerm(s).scores||[]).find(x=>x.subject===subject);
+    const max = inp.dataset.f==="exam" ? 70 : 10;
+    sc[inp.dataset.f] = Math.max(0, Math.min(max, Number(inp.value||0)));
+    sc.ca = Number(sc.ca1||0)+Number(sc.ca2||0)+Number(sc.ca3||0);
+    sc.total = Math.min(100, sc.ca + Number(sc.exam||0));
+    const t = curTerm(s);
+    t.avg = Math.round(t.scores.reduce((a,b)=>a+(b.total||0),0)/t.scores.length);
+  });
+  show("teacherdesk");
+  toast("Scores saved for "+cls+" · "+subject);
+}
+function tdAttend(pair){
+  const cls = (document.getElementById("tdACls")||{}).value || pair.classes[0];
+  const safeCls = pair.classes.includes(cls) ? cls : pair.classes[0];
+  const key = attKey(safeCls, pair.subject);
+  if (!TD.attendance[key]) TD.attendance[key] = { days:[] };
+  const book = TD.attendance[key];
+  const list = ROLL.filter(s=>s.cls===safeCls).sort((a,b)=>a.name.localeCompare(b.name));
+  const daysHeld = book.days.length;
+  function presentCount(id){
+    return book.days.filter(d => d.present[id]).length;
+  }
+  const today = new Date().toISOString().slice(0,10);
+  return `
+    <div class="notice">Tick those present for <b>this new session</b>. Previous days stay on file. After you save, the boxes clear so the next lesson starts on a fresh sheet. Totals of days present do not reset.</div>
+    <div class="toolbar">
+      <select id="tdACls" onchange="show('teacherdesk')">
+        ${pair.classes.map(c=>`<option ${c===safeCls?"selected":""}>${c}</option>`).join("")}
+      </select>
+      <input id="attDate" type="date" value="${today}" />
+      <button class="btn btn-navy btn-sm" onclick="saveAttend('${safeCls}','${pair.subject}')">Save today's roll</button>
+    </div>
+    <div class="card">
+      <h3>${safeCls} · ${pair.subject} · new sheet</h3>
+      <p class="mini">${daysHeld} previous session(s) already stored.</p>
+      <table>
+        <tr><th></th><th>Adm. No</th><th>Student</th><th>Days present (kept)</th><th>Sessions held</th></tr>
+        ${list.map(s=>`<tr>
+          <td><input type="checkbox" data-aid="${s.id}" checked /></td>
+          <td>${s.id}</td><td>${s.name}</td>
+          <td><b>${presentCount(s.id)}</b></td>
+          <td>${daysHeld}</td>
+        </tr>`).join("")}
+      </table>
+    </div>
+    <div class="card">
+      <h3>Previous sessions</h3>
+      ${book.days.slice().reverse().slice(0,8).map(d=>`<div class="chip"><b>${d.date}</b> · present ${Object.keys(d.present).filter(k=>d.present[k]).length}/${list.length}</div>`).join("")||"<p class='fine'>No previous roll yet.</p>"}
+    </div>`;
+}
+function saveAttend(cls, subject){
+  const key = attKey(cls, subject);
+  if (!TD.attendance[key]) TD.attendance[key] = { days:[] };
+  const date = (document.getElementById("attDate")||{}).value || new Date().toISOString().slice(0,10);
+  const present = {};
+  document.querySelectorAll("#view input[data-aid]").forEach(cb => { present[cb.dataset.aid] = !!cb.checked; });
+  TD.attendance[key].days = TD.attendance[key].days.filter(d => d.date!==date);
+  TD.attendance[key].days.push({ date, present });
+  saveTD();
+  show("teacherdesk");
+  toast("Attendance saved for "+date+" · next lesson opens a new sheet");
+}
+function tdRoom(pair){
+  return `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Classroom maintenance</h3>
+        <label>Class</label>
+        <select id="rmCls">${pair.classes.map(c=>`<option>${c}</option>`).join("")}</select>
+        <label>What needs attention</label>
+        <input id="rmWhat" placeholder="e.g. two broken desks, fan not working" />
+        <button class="btn btn-navy" style="margin-top:12px" onclick="sendMaintain()">Submit to VPs</button>
+      </div>
+      <div class="card">
+        <h3>Class sundry expense</h3>
+        <label>Class</label>
+        <select id="suCls">${pair.classes.map(c=>`<option>${c}</option>`).join("")}</select>
+        <label>Item</label>
+        <input id="suItem" placeholder="e.g. graph books, chalk, practical reagents" />
+        <label>Cost (₦)</label>
+        <input id="suCost" type="number" min="0" />
+        <button class="btn btn-navy" style="margin-top:12px" onclick="sendSundry()">Submit to VPs</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Sent this term</h3>
+      ${[...TD.maintain,...TD.sundry].slice(-12).reverse().map(x=>`<div class="chip"><b>${x.kind}</b> · ${x.cls} · ${x.detail} · ${x.when}</div>`).join("")||"<p class='fine'>Nothing submitted yet.</p>"}
+    </div>`;
+}
+function sendMaintain(){
+  const cls=document.getElementById("rmCls").value;
+  const what=(document.getElementById("rmWhat").value||"").trim();
+  if (!what) { toast("Describe the classroom issue"); return; }
+  const row = { kind:"Maintenance", cls, teacher:teacherName(), detail:what, when:new Date().toLocaleString("en-NG"), status:"New" };
+  TD.maintain.push(row); VP.inbox = VP.inbox||[]; VP.inbox.unshift(row);
+  saveTD(); saveVP(); show("teacherdesk"); toast("Maintenance sent to VP Admin and VP Academics");
+}
+function sendSundry(){
+  const cls=document.getElementById("suCls").value;
+  const item=(document.getElementById("suItem").value||"").trim();
+  const cost=Number(document.getElementById("suCost").value||0);
+  if (!item || cost<=0) { toast("Item and cost required"); return; }
+  const detail = item+" — ₦"+cost.toLocaleString();
+  const row = { kind:"Class sundry", cls, teacher:teacherName(), detail, when:new Date().toLocaleString("en-NG"), status:"New" };
+  TD.sundry.push(row); VP.inbox = VP.inbox||[]; VP.inbox.unshift(row);
+  VP.expenses.unshift({ student:cls+" class", id:"—", item:item+" ("+teacherName()+")", cost, when:row.when });
+  saveTD(); saveVP(); show("teacherdesk"); toast("Sundry sent to the VPs");
+}
+function tdGclass(pair){
+  const links = pair.classes.map(c => {
+    const k = attKey(c, pair.subject);
+    const url = TD.gclass[k] || ("https://classroom.google.com/c/"+encodeURIComponent((c+"-"+pair.subject).replace(/\s+/g,"")));
+    return { c, k, url };
+  });
+  return `
+    <div class="notice">Students open the class link to read notes, assignments and materials you posted in Google Classroom.</div>
+    ${links.map(x=>`
+      <div class="card">
+        <h3>${x.c} · ${pair.subject}</h3>
+        <label>Classroom link</label>
+        <input id="gc-${x.k}" value="${x.url}" />
+        <div class="toolbar" style="margin-top:8px">
+          <button class="btn btn-navy btn-sm" onclick="saveGc('${x.k}')">Save link</button>
+          <a class="btn btn-ghost btn-sm" href="${x.url}" target="_blank" rel="noopener">Open Google Classroom</a>
+        </div>
+      </div>`).join("")}
+  `;
+}
+function saveGc(k){
+  const el = document.getElementById("gc-"+k);
+  if (el) { TD.gclass[k] = el.value.trim(); saveTD(); toast("Classroom link saved"); }
+}
+
+function dostudies(){
+  const tabs = [
+    ["teacher","Teacher · CA analysis"],
+    ["resolve","Score issues"],
+    ["results","All results"],
+    ["skills","Skills venues"],
+    ["clubs","Clubs"],
+    ["trends","Trends"]
+  ];
+  return `
+    <div class="notice"><b>Dean of Studies — Mr. O. Pius.</b> Same academic command as VP Academics, plus teacher-by-class CA books and a desk to correct disputed scores.</div>
+    <div class="pills">
+      ${tabs.map(([id,l])=>`<button class="${dosTab===id?"on":""}" onclick="dosTab='${id}';show('dostudies')">${l}</button>`).join("")}
+    </div>
+    ${dosTab==="teacher"?dosTeacher():""}
+    ${dosTab==="resolve"?dosResolve():""}
+    ${dosTab==="results"?vaResults():""}
+    ${dosTab==="skills"?vaSkills():""}
+    ${dosTab==="clubs"?vaClubs():""}
+    ${dosTab==="trends"?vaTrends():""}
+  `;
+}
+function dosTeacher(){
+  const pair = loadPair((document.getElementById("dosPair")||{}).value || (TEACHING_LOAD[0].teacher+"||"+TEACHING_LOAD[0].subject));
+  const options = TEACHING_LOAD.map(t => `<option value="${t.teacher}||${t.subject}" ${t.teacher===pair.teacher&&t.subject===pair.subject?"selected":""}>${t.teacher} — ${t.subject}</option>`).join("");
+  pair.classes.forEach(c => ROLL.filter(s=>s.cls===c).forEach(s => ensureSubject(s, pair.subject)));
+  const learners = ROLL.filter(s => pair.classes.includes(s.cls));
+  const byClass = pair.classes.map(c => {
+    const list = learners.filter(s=>s.cls===c);
+    const rows = list.map(s => {
+      const sc = (curTerm(s).scores||[]).find(x=>x.subject===pair.subject) || {ca1:0,ca2:0,ca3:0,ca:0,exam:0,total:0};
+      return { s, sc };
+    }).sort((a,b)=>a.s.name.localeCompare(b.s.name));
+    const mean = key => rows.length ? Math.round(rows.reduce((a,r)=>a+Number(r.sc[key]||0),0)/rows.length) : 0;
+    return { c, rows, n:rows.length, ca1:mean("ca1"), ca2:mean("ca2"), ca3:mean("ca3"), ca:mean("ca"), exam:mean("exam"), total:mean("total") };
+  });
+  return `
+    <div class="toolbar">
+      <select id="dosPair" onchange="show('dostudies')">
+        ${options}
+      </select>
+      <span class="mini">Example load: Mr. S. Takor — Business Studies (JSS 1 &amp; 2) and Economics (SSS 1).</span>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span>Teacher</span><b style="font-size:1.05rem">${pair.teacher}</b><em>${pair.subject}</em></div>
+      <div class="kpi"><span>Classes taught</span><b>${pair.classes.length}</b><em>${pair.classes.join(", ")}</em></div>
+      <div class="kpi"><span>Learners offering it</span><b>${learners.length}</b><em>on current roll</em></div>
+      <div class="kpi"><span>CA book average</span><b>${byClass.length?Math.round(byClass.reduce((a,x)=>a+x.ca,0)/byClass.length):0}/30</b><em>three CAs combined</em></div>
+    </div>
+    ${byClass.map(g => `
+      <div class="card">
+        <h3>${g.c} · ${pair.subject} · ${g.n} students</h3>
+        <p class="mini">Class CA means — CA1 ${g.ca1}/10 · CA2 ${g.ca2}/10 · CA3 ${g.ca3}/10 · CA ${g.ca}/30 · Exam ${g.exam}/70 · Total ${g.total}/100</p>
+        <table>
+          <tr><th>Adm. No</th><th>Student</th><th>CA1 /10</th><th>CA2 /10</th><th>CA3 /10</th><th>CA 30%</th><th>Exam /70</th><th>Total</th><th>Grade</th><th></th></tr>
+          ${g.rows.map(r => `<tr>
+            <td>${r.s.id}</td><td>${r.s.name}</td>
+            <td>${r.sc.ca1}</td><td>${r.sc.ca2}</td><td>${r.sc.ca3}</td>
+            <td><b>${r.sc.ca}</b></td><td>${r.sc.exam}</td><td><b>${r.sc.total}</b></td>
+            <td>${grade(r.sc.total)}</td>
+            <td><button class="btn btn-ghost btn-sm" onclick="openFix('${r.s.id}','${pair.subject}')">Fix score</button></td>
+          </tr>`).join("")}
+        </table>
+      </div>`).join("")}
+  `;
+}
+function dosResolve(){
+  return `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Open a score issue</h3>
+        <label>Student</label>
+        <input id="fxName" list="allStuDos" placeholder="Student name" />
+        <datalist id="allStuDos">${ROLL.filter(s=>s.cls!=="Alumni").map(s=>`<option value="${s.name}">${s.id}</option>`).join("")}</datalist>
+        <label>Subject</label>
+        <input id="fxSub" placeholder="e.g. Economics" />
+        <label>What is wrong</label>
+        <input id="fxWhy" placeholder="e.g. CA2 entered as 3 instead of 8" />
+        <button class="btn btn-navy" style="margin-top:12px" onclick="fileIssue()">File for review</button>
+      </div>
+      <div class="card">
+        <h3>Resolution book</h3>
+        ${DOS.issues.map((x,i)=>`<div class="chip"><b>${x.student}</b> · ${x.subject}<br/>${x.why}<br/><span class="tag ${x.status==="Resolved"?"ok":"due"}">${x.status}</span> · ${x.when}
+          ${x.status!=="Resolved"?` <button class="btn btn-ghost btn-sm" onclick="openFixId('${x.id}','${x.subject}',${i})">Resolve</button>`:""}
+        </div>`).join("")||"<p class='fine'>No score disputes on file.</p>"}
+      </div>
+    </div>
+    <p class="fine">Corrections rewrite CA1 / CA2 / CA3 / exam on the live mark book and leave a trail for the teacher and Principal.</p>`;
+}
+function fileIssue(){
+  const name=(document.getElementById("fxName").value||"").trim();
+  const subject=(document.getElementById("fxSub").value||"").trim();
+  const why=(document.getElementById("fxWhy").value||"").trim();
+  const s = ROLL.find(r => r.name.toLowerCase()===name.toLowerCase());
+  if (!s || !subject || !why) { toast("Student, subject and the issue are required"); return; }
+  ensureSubject(s, subject);
+  DOS.issues.unshift({ id:s.id, student:s.name, subject, why, status:"Open", when:new Date().toLocaleString("en-NG") });
+  saveDOS(); show("dostudies"); toast("Issue filed for "+s.name);
+}
+function openFixId(id, subject, idx){ openFix(id, subject, idx); }
+function openFix(id, subject, issueIdx){
+  const s = ROLL.find(r => r.id===id);
+  if (!s) return;
+  ensureSubject(s, subject);
+  const sc = (curTerm(s).scores||[]).find(x=>x.subject===subject);
+  if (!sc) return;
+  openModal(`
+    <h2>Resolve score · ${s.name}</h2>
+    <p class="mini">${s.id} · ${s.cls} · ${subject} · current term</p>
+    <div class="row" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px">
+      <div><label>CA1 /10</label><input id="f1" type="number" min="0" max="10" value="${sc.ca1}" /></div>
+      <div><label>CA2 /10</label><input id="f2" type="number" min="0" max="10" value="${sc.ca2}" /></div>
+      <div><label>CA3 /10</label><input id="f3" type="number" min="0" max="10" value="${sc.ca3}" /></div>
+      <div><label>Exam /70</label><input id="fe" type="number" min="0" max="70" value="${sc.exam}" /></div>
+    </div>
+    <label>Dean’s note</label>
+    <input id="fNote" placeholder="Reason for the change" />
+    <div class="toolbar" style="margin-top:12px">
+      <button class="btn btn-navy" onclick="saveFix('${id}','${subject}',${issueIdx==null?"null":issueIdx})">Save correction</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+  `);
+}
+function saveFix(id, subject, issueIdx){
+  const s = ROLL.find(r => r.id===id);
+  const t = curTerm(s);
+  const sc = (t.scores||[]).find(x=>x.subject===subject);
+  const ca1 = Math.max(0, Math.min(10, Number(document.getElementById("f1").value||0)));
+  const ca2 = Math.max(0, Math.min(10, Number(document.getElementById("f2").value||0)));
+  const ca3 = Math.max(0, Math.min(10, Number(document.getElementById("f3").value||0)));
+  const exam = Math.max(0, Math.min(70, Number(document.getElementById("fe").value||0)));
+  sc.ca1=ca1; sc.ca2=ca2; sc.ca3=ca3; sc.ca=ca1+ca2+ca3; sc.exam=exam; sc.total=Math.min(100, sc.ca+exam);
+  t.avg = Math.round(t.scores.reduce((a,b)=>a+(b.total||0),0)/t.scores.length);
+  const note = (document.getElementById("fNote").value||"Score corrected by Dean of Studies");
+  if (issueIdx!=null && DOS.issues[issueIdx]) {
+    DOS.issues[issueIdx].status = "Resolved";
+    DOS.issues[issueIdx].note = note;
+  } else {
+    DOS.issues.unshift({ id, student:s.name, subject, why:note, status:"Resolved", when:new Date().toLocaleString("en-NG") });
+  }
+  saveDOS();
+  closeModal();
+  show("dostudies");
+  toast("Score updated for "+s.name+" · "+subject);
+}
+
+function vpacad(){
+  const tabs = [
+    ["results","All results"],
+    ["skills","Skills venues"],
+    ["clubs","Club activities"],
+    ["trends","Academic trends"]
+  ];
+  return `
+    <div class="notice"><b>Vice Principal Academics — Mr. S.T. Dzapine.</b> Whole-college results (CA1 + CA2 + CA3 = 30%, exam = 70%), skill-centre postings, club lists, and session trend analysis. Teacher classroom tickets sit with VP Admin under <b>From teachers</b>.</div>
+    <div class="pills">
+      ${tabs.map(([id,l])=>`<button class="${vaTab===id?"on":""}" onclick="vaTab='${id}';show('vpacad')">${l}</button>`).join("")}
+    </div>
+    ${vaTab==="results"?vaResults():""}
+    ${vaTab==="skills"?vaSkills():""}
+    ${vaTab==="clubs"?vaClubs():""}
+    ${vaTab==="trends"?vaTrends():""}
+  `;
+}
+function vaResults(){
+  const rows = ROLL.filter(s=>s.cls!=="Alumni").sort((a,b)=>a.cls.localeCompare(b.cls)||a.name.localeCompare(b.name));
+  return `
+    <div class="toolbar">
+      <select id="vaCls" onchange="filterVAResults()">
+        <option value="">All classes</option>
+        ${CLASS_LIST.map(c=>`<option>${c}</option>`).join("")}
+      </select>
+      <input id="vaQ" placeholder="Name or admission no." oninput="filterVAResults()" />
+      <button class="btn btn-ghost btn-sm" onclick="window.print()">Print results sheet</button>
+    </div>
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>Adm. No</th><th>Name</th><th>Class</th><th>CA1</th><th>CA2</th><th>CA3</th><th>CA 30%</th><th>Exam 70%</th><th>Total</th><th>Prev. term</th><th>Grade</th></tr>
+        </thead>
+        <tbody id="vaResBody">${vaResultRows(rows)}</tbody>
+      </table>
+    </div>`;
+}
+function vaResultRows(rows){
+  return rows.map(s => {
+    const t = curTerm(s);
+    const scores = t.scores||[];
+    const avg = (key) => scores.length ? Math.round(scores.reduce((a,x)=>a+Number(x[key]||0),0)/scores.length) : 0;
+    return `<tr>
+      <td>${s.id}</td><td>${s.name}</td><td>${s.cls}</td>
+      <td>${avg("ca1")}</td><td>${avg("ca2")}</td><td>${avg("ca3")}</td>
+      <td><b>${avg("ca")}</b></td><td>${avg("exam")}</td>
+      <td><b>${t.avg||0}%</b></td>
+      <td>${prevTerm(s).avg||0}%</td>
+      <td>${grade(t.avg||0)}</td>
+    </tr>`;
+  }).join("") || "<tr><td colspan='11'>No records.</td></tr>";
+}
+function filterVAResults(){
+  const c = (document.getElementById("vaCls")||{}).value || "";
+  const q = ((document.getElementById("vaQ")||{}).value||"").toLowerCase();
+  const rows = ROLL.filter(s => s.cls!=="Alumni" && (!c || s.cls===c) && (s.name+s.id).toLowerCase().includes(q))
+    .sort((a,b)=>a.cls.localeCompare(b.cls)||a.name.localeCompare(b.name));
+  const b = document.getElementById("vaResBody");
+  if (b) b.innerHTML = vaResultRows(rows);
+}
+function vaSkills(){
+  return `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Assign to a skills venue</h3>
+        <label>Student</label>
+        <input id="skName" list="allStu" placeholder="Type student name" />
+        <datalist id="allStu">${ROLL.filter(s=>s.cls!=="Alumni").map(s=>`<option value="${s.name}">${s.id} · ${s.cls}</option>`).join("")}</datalist>
+        <label>Skills venue</label>
+        <select id="skVen">${SKILL_VENUES.map(v=>`<option>${v}</option>`).join("")}</select>
+        <button class="btn btn-navy" style="margin-top:12px" onclick="assignSkill()">Post assignment</button>
+      </div>
+      <div class="card">
+        <h3>Venue rolls</h3>
+        ${SKILL_VENUES.map(v=>{
+          const list = VA.skills.filter(x=>x.venue===v);
+          return `<div class="chip"><b>${v}</b> · ${list.length} learner(s)<br/>${list.map(x=>x.name+" <span class='mini'>("+x.cls+")</span>").join("<br/>")||"<span class='mini'>None yet</span>"}</div>`;
+        }).join("")}
+      </div>
+    </div>`;
+}
+function assignSkill(){
+  const name=(document.getElementById("skName").value||"").trim();
+  const venue=document.getElementById("skVen").value;
+  const s = ROLL.find(r => r.name.toLowerCase()===name.toLowerCase());
+  if (!s) { toast("Pick a student on the college roll"); return; }
+  VA.skills = VA.skills.filter(x => x.id!==s.id);
+  VA.skills.push({ id:s.id, name:s.name, cls:s.cls, venue });
+  saveVA(); show((current&&current.access==="dean")?"dostudies":"vpacad"); toast(s.name+" posted to "+venue);
+}
+function vaClubs(){
+  return `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Assign to a club</h3>
+        <label>Student</label>
+        <input id="clName" list="allStu2" placeholder="Type student name" />
+        <datalist id="allStu2">${ROLL.filter(s=>s.cls!=="Alumni").map(s=>`<option value="${s.name}">${s.id} · ${s.cls}</option>`).join("")}</datalist>
+        <label>Club</label>
+        <select id="clClub">${CLUBS.map(v=>`<option>${v}</option>`).join("")}</select>
+        <button class="btn btn-navy" style="margin-top:12px" onclick="assignClub()">Post to club</button>
+      </div>
+      <div class="card">
+        <h3>Club registers</h3>
+        ${CLUBS.map(v=>{
+          const list = VA.clubs.filter(x=>x.club===v);
+          return `<div class="chip"><b>${v}</b> · ${list.length}<br/>${list.map(x=>x.name+" <span class='mini'>("+x.cls+")</span>").join("<br/>")||"<span class='mini'>None yet</span>"}</div>`;
+        }).join("")}
+      </div>
+    </div>`;
+}
+function assignClub(){
+  const name=(document.getElementById("clName").value||"").trim();
+  const club=document.getElementById("clClub").value;
+  const s = ROLL.find(r => r.name.toLowerCase()===name.toLowerCase());
+  if (!s) { toast("Pick a student on the college roll"); return; }
+  if (VA.clubs.some(x => x.id===s.id && x.club===club)) { toast("Already in that club"); return; }
+  VA.clubs.push({ id:s.id, name:s.name, cls:s.cls, club });
+  saveVA(); show((current&&current.access==="dean")?"dostudies":"vpacad"); toast(s.name+" added to "+club);
+}
+function vaTrends(){
+  const live = ROLL.filter(s => s.cls!=="Alumni");
+  const now = live.map(s => curTerm(s).avg||0);
+  const was = live.map(s => prevTerm(s).avg||0);
+  const mean = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
+  const pass = now.filter(x=>x>=40).length;
+  const credit = now.filter(x=>x>=55).length;
+  const dist = now.filter(x=>x>=75).length;
+  const mNow = mean(now), mWas = mean(was);
+  const delta = mNow - mWas;
+  const byClass = CLASS_LIST.map(c => {
+    const list = live.filter(s=>s.cls===c);
+    const a = mean(list.map(s=>curTerm(s).avg||0));
+    const p = mean(list.map(s=>prevTerm(s).avg||0));
+    return { c, n:list.length, a, p, d:a-p };
+  });
+  const subjects = {};
+  live.forEach(s => (curTerm(s).scores||[]).forEach(sc => {
+    if (!subjects[sc.subject]) subjects[sc.subject] = [];
+    subjects[sc.subject].push(sc.total||0);
+  }));
+  const subjRows = Object.keys(subjects).sort().map(k => ({ k, a: mean(subjects[k]) }));
+  return `
+    <div class="kpis">
+      <div class="kpi"><span>College current average</span><b>${mNow}%</b><em>previous term ${mWas}%</em></div>
+      <div class="kpi"><span>Term movement</span><b>${delta>=0?"+":""}${delta}</b><em>points vs last term</em></div>
+      <div class="kpi"><span>Pass rate (≥40)</span><b>${live.length?Math.round(pass*100/live.length):0}%</b><em>${pass} of ${live.length}</em></div>
+      <div class="kpi"><span>Distinctions (A)</span><b>${live.length?Math.round(dist*100/live.length):0}%</b><em>${credit} at credit+</em></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Average by class arm</h3>
+        <table>
+          <tr><th>Class</th><th>On roll</th><th>Now</th><th>Last term</th><th>Trend</th><th></th></tr>
+          ${byClass.map(r=>`<tr>
+            <td>${r.c}</td><td>${r.n}</td><td><b>${r.a}%</b></td><td>${r.p}%</td>
+            <td>${r.d>=0?"▲":"▼"} ${r.d>=0?"+":""}${r.d}</td>
+            <td><div class="bar"><i style="width:${Math.min(100,r.a)}%"></i></div></td>
+          </tr>`).join("")}
+        </table>
+      </div>
+      <div class="card">
+        <h3>Subject strength (current term totals /100)</h3>
+        <table>
+          <tr><th>Subject</th><th>College average</th><th></th></tr>
+          ${subjRows.map(r=>`<tr>
+            <td>${r.k}</td><td><b>${r.a}%</b></td>
+            <td><div class="bar"><i style="width:${Math.min(100,r.a)}%"></i></div></td>
+          </tr>`).join("")}
+        </table>
+        <p class="fine" style="margin-top:10px">Use this board for staff briefing: which arms need extra prep, which subjects are carrying the college, and whether the session is rising or slipping against last term.</p>
+      </div>
+    </div>`;
+}
+
+function vpadmin(){
+  const tabs = [
+    ["sundry","Sundry expenses"],
+    ["staff","Staff & salaries"],
+    ["events","Events"],
+    ["medical","Medical leave"],
+    ["parents","Parent WhatsApp"],
+    ["admitnew","Post new students"],
+    ["inbox","From teachers"]
+  ];
+  return `
+    <div class="notice"><b>Vice Principal Administration — Mr. M.C. Itodo.</b> Sundry charges on named students, staff payroll files, event oversight, medical exit log with automatic parent lookup, WhatsApp directory, and posting of new admissions into class arms and colour houses.</div>
+    <div class="pills">
+      ${tabs.map(([id,l]) => `<button class="${vpTab===id?"on":""}" onclick="vpTab='${id}';show('vpadmin')">${l}</button>`).join("")}
+    </div>
+    ${vpTab==="sundry"?vpSundry():""}
+    ${vpTab==="staff"?vpStaff():""}
+    ${vpTab==="events"?vpEvents():""}
+    ${vpTab==="medical"?vpMedical():""}
+    ${vpTab==="parents"?vpParents():""}
+    ${vpTab==="admitnew"?vpAdmitNew():""}
+    ${vpTab==="inbox"?vpInbox():""}
+  `;
+}
+function vpInbox(){
+  const items = VP.inbox || [];
+  return `
+    <div class="card">
+      <h3>Submissions from class teachers</h3>
+      ${items.map((x,i)=>`<div class="chip"><b>${x.kind}</b> · ${x.cls} · ${x.teacher}<br/>${x.detail}<br/><span class="mini">${x.when}</span>
+        <button class="btn btn-ghost btn-sm" onclick="VP.inbox[${i}].status='Seen';saveVP();show('vpadmin')">${x.status||"New"}</button>
+      </div>`).join("")||"<p class='fine'>No teacher submissions yet. They appear when a teacher sends classroom maintenance or class sundry to the VPs.</p>"}
+    </div>`;
+}
+function vpSundry(){
+  const total = VP.expenses.reduce((a,e)=>a+Number(e.cost||0),0);
+  return `
+    <div class="kpis">
+      <div class="kpi"><span>Sundry tickets</span><b>${VP.expenses.length}</b><em>charged to named students</em></div>
+      <div class="kpi"><span>Value this book</span><b>₦${total.toLocaleString()}</b><em>recoverable via bursary</em></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Add charge</h3>
+        <label>Student name</label>
+        <input id="sxName" list="sxNames" placeholder="Start typing a student" />
+        <datalist id="sxNames">${ROLL.map(s=>`<option value="${s.name}">${s.id} · ${s.cls}</option>`).join("")}</datalist>
+        <label>Item</label>
+        <input id="sxItem" placeholder="e.g. Broken beaker, extra mattress, bus fare" />
+        <label>Cost (₦)</label>
+        <input id="sxCost" type="number" min="0" placeholder="2500" />
+        <button class="btn btn-navy" style="margin-top:12px" onclick="addSundry()">Post against student</button>
+      </div>
+      <div class="card">
+        <h3>Ledger</h3>
+        <table>
+          <tr><th>When</th><th>Student</th><th>Item</th><th>Cost</th><th></th></tr>
+          ${VP.expenses.map((e,i)=>`<tr><td>${e.when}</td><td>${e.student}<div class="mini">${e.id||""}</div></td><td>${e.item}</td><td>₦${Number(e.cost).toLocaleString()}</td><td><button class="btn btn-ghost btn-sm" onclick="VP.expenses.splice(${i},1);saveVP();show('vpadmin')">✕</button></td></tr>`).join("")||"<tr><td colspan='5'>No charges yet.</td></tr>"}
+        </table>
+      </div>
+    </div>`;
+}
+function addSundry(){
+  const name = (document.getElementById("sxName").value||"").trim();
+  const item = (document.getElementById("sxItem").value||"").trim();
+  const cost = Number(document.getElementById("sxCost").value||0);
+  if (!name || !item || cost<=0) { toast("Enter student, item and cost"); return; }
+  const hit = ROLL.find(s => s.name.toLowerCase()===name.toLowerCase());
+  VP.expenses.unshift({ student:name, id:hit?hit.id:"—", item, cost, when:new Date().toLocaleString("en-NG") });
+  saveVP(); show("vpadmin"); toast("₦"+cost.toLocaleString()+" charged to "+name);
+}
+function vpStaff(){
+  const bill = VP.staff.reduce((a,s)=>a+Number(s.salary||0),0);
+  return `
+    <div class="kpis">
+      <div class="kpi"><span>Staff on file</span><b>${VP.staff.length}</b><em>active payroll</em></div>
+      <div class="kpi"><span>Monthly salary book</span><b>₦${bill.toLocaleString()}</b><em>demo figures</em></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Add staff</h3>
+        <label>Full name</label><input id="stName" placeholder="Mr. / Mrs." />
+        <label>Job post</label><input id="stPost" placeholder="e.g. Physics teacher" />
+        <label>Bank</label><input id="stBank" placeholder="Access Bank" />
+        <label>Account number</label><input id="stAcct" placeholder="10-digit account" />
+        <label>Monthly salary (₦)</label><input id="stPay" type="number" min="0" />
+        <button class="btn btn-navy" style="margin-top:12px" onclick="addStaff()">Save staff file</button>
+      </div>
+      <div class="card">
+        <h3>Payroll register</h3>
+        <table>
+          <tr><th>Name</th><th>Post</th><th>Bank / account</th><th>Salary</th></tr>
+          ${VP.staff.map(s=>`<tr><td><b>${s.name}</b></td><td>${s.post}</td><td>${s.bank}<div class="mini">${s.acct}</div></td><td>₦${Number(s.salary).toLocaleString()}</td></tr>`).join("")}
+        </table>
+      </div>
+    </div>`;
+}
+function addStaff(){
+  const name=(document.getElementById("stName").value||"").trim();
+  const post=(document.getElementById("stPost").value||"").trim();
+  const bank=(document.getElementById("stBank").value||"").trim();
+  const acct=(document.getElementById("stAcct").value||"").trim();
+  const salary=Number(document.getElementById("stPay").value||0);
+  if (!name || !post) { toast("Name and job post are required"); return; }
+  VP.staff.push({ name, post, bank:bank||"—", acct:acct||"—", salary });
+  saveVP(); show("vpadmin"); toast(name+" added to staff file");
+}
+function vpEvents(){
+  return `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Log an event</h3>
+        <label>Title</label><input id="evTitle" placeholder="Graduation, visiting day, prize night…" />
+        <label>Date</label><input id="evDate" type="date" />
+        <label>Time</label><input id="evTime" type="time" />
+        <label>Place</label><input id="evPlace" placeholder="College hall" />
+        <label>Notes / oversight</label><textarea id="evNote" placeholder="Chairs, security, parent seating, certificates"></textarea>
+        <button class="btn btn-navy" style="margin-top:12px" onclick="addEvent()">Save to calendar</button>
+      </div>
+      <div class="card">
+        <h3>Oversight board</h3>
+        ${VP.events.map((e,i)=>`<div class="chip"><b>${e.title}</b><br/>${e.date} · ${e.time} · ${e.place}<br/>${e.note||""}<br/><span class="tag info">${e.status||"Listed"}</span>
+          <button class="btn btn-ghost btn-sm" onclick="VP.events[${i}].status='Done';saveVP();show('vpadmin')">Mark done</button>
+        </div>`).join("")||"<p class='fine'>No events yet.</p>"}
+      </div>
+    </div>`;
+}
+function addEvent(){
+  const title=(document.getElementById("evTitle").value||"").trim();
+  if (!title) { toast("Give the event a title"); return; }
+  VP.events.unshift({
+    title,
+    date: document.getElementById("evDate").value || "TBA",
+    time: document.getElementById("evTime").value || "—",
+    place: document.getElementById("evPlace").value || "Campus",
+    note: document.getElementById("evNote").value || "",
+    status: "Scheduled"
+  });
+  saveVP(); show("vpadmin"); toast("Event filed: "+title);
+}
+function vpMedical(){
+  return `
+    <div class="notice">Type the student's <b>surname</b>. Nexus finds the ward and fills the linked parent, WhatsApp and phone. Record the complaint in ordinary school language only.</div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Student leaving for care</h3>
+        <label>Surname</label>
+        <input id="medSur" placeholder="e.g. Terhemba" oninput="medLookup()" />
+        <div id="medHits"></div>
+        <label>Student (confirmed)</label>
+        <input id="medName" placeholder="Picked automatically" />
+        <label>Parent</label>
+        <input id="medPar" readonly />
+        <label>WhatsApp</label>
+        <input id="medWa" readonly />
+        <label>Phone</label>
+        <input id="medPh" readonly />
+        <label>Complaint / reason for exit</label>
+        <input id="medWhy" placeholder="e.g. headache, review at clinic" />
+        <label>Date of exit</label>
+        <input id="medDate" type="date" />
+        <label>Time of exit</label>
+        <input id="medTime" type="time" />
+        <button class="btn btn-navy" style="margin-top:12px" onclick="addMedical()">Record exit</button>
+      </div>
+      <div class="card">
+        <h3>Medical exit book</h3>
+        <table>
+          <tr><th>Left</th><th>Student</th><th>Complaint</th><th>Parent contact</th></tr>
+          ${VP.medical.map(m=>`<tr><td>${m.date} ${m.time}</td><td>${m.student}</td><td>${m.why}</td><td>${m.parent}<div class="mini">WA ${m.whatsapp} · ${m.phone}</div></td></tr>`).join("")||"<tr><td colspan='4'>No exits recorded.</td></tr>"}
+        </table>
+      </div>
+    </div>`;
+}
+function medLookup(){
+  const q = document.getElementById("medSur").value;
+  const hits = lookupParents(q);
+  const box = document.getElementById("medHits");
+  if (!box) return;
+  if (!hits.length) { box.innerHTML = q.length>=2 ? "<p class='fine'>No ward with that surname.</p>" : ""; return; }
+  box.innerHTML = hits.slice(0,6).map((h,i)=>`
+    <div class="chip" style="cursor:pointer" onclick="pickMed(${i})">
+      <b>${h.student.name}</b> · ${h.student.cls} · ${h.student.id}<br/>
+      ${h.parent.title} · WA ${h.parent.whatsapp} · ${h.parent.phone}
+    </div>`).join("");
+  window._medHits = hits;
+  if (hits.length===1) applyMed(hits[0]);
+}
+function pickMed(i){ if (window._medHits && window._medHits[i]) applyMed(window._medHits[i]); }
+function applyMed(h){
+  document.getElementById("medName").value = h.student.name;
+  document.getElementById("medPar").value = h.parent.title;
+  document.getElementById("medWa").value = h.parent.whatsapp;
+  document.getElementById("medPh").value = h.parent.phone;
+}
+function addMedical(){
+  const student=(document.getElementById("medName").value||"").trim();
+  const why=(document.getElementById("medWhy").value||"").trim();
+  if (!student || !why) { toast("Student and complaint are required"); return; }
+  VP.medical.unshift({
+    student, why,
+    parent: document.getElementById("medPar").value,
+    whatsapp: document.getElementById("medWa").value,
+    phone: document.getElementById("medPh").value,
+    date: document.getElementById("medDate").value || new Date().toISOString().slice(0,10),
+    time: document.getElementById("medTime").value || new Date().toTimeString().slice(0,5)
+  });
+  saveVP(); vpTab="medical"; show("vpadmin"); toast("Exit recorded for "+student);
+}
+function vpParents(){
+  const list = parentsIndex();
+  return `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Parent / management teacher WhatsApp group</h3>
+        <label>Message</label>
+        <textarea id="waBody" placeholder="Type a notice for the group…"></textarea>
+        <button class="btn btn-navy" style="margin-top:10px" onclick="postWA()">Send to group</button>
+        <div style="margin-top:12px">
+          ${VP.wa.map(m=>`<div class="wa"><b>${m.who}</b> · ${m.at}<br/>${m.text}</div>`).join("")}
+        </div>
+      </div>
+      <div class="card">
+        <h3>All parent WhatsApp numbers</h3>
+        <input placeholder="Filter surname" oninput="filterPar(this.value)" />
+        <table>
+          <thead><tr><th>Family</th><th>Ward(s)</th><th>WhatsApp</th><th>Phone</th></tr></thead>
+          <tbody id="parBody">${parRows(list)}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+function parRows(list){
+  return list.map(p=>`<tr><td>${p.title}</td><td class="mini">${p.ward}</td><td>${p.whatsapp}</td><td>${p.phone}</td></tr>`).join("");
+}
+function filterPar(q){
+  const list = parentsIndex().filter(p => (p.surname+" "+p.ward).toLowerCase().includes((q||"").toLowerCase()));
+  const b = document.getElementById("parBody");
+  if (b) b.innerHTML = parRows(list);
+}
+function postWA(){
+  const text=(document.getElementById("waBody").value||"").trim();
+  if (!text) { toast("Write a message first"); return; }
+  VP.wa.unshift({ who:(current&&current.name)||"VP Admin", text, at:new Date().toLocaleString("en-NG") });
+  saveVP(); show("vpadmin"); toast("Posted to parent / management teacher group");
+}
+function vpAdmitNew(){
+  return `
+    <div class="notice">Post a newly admitted student into an arm (JSS 1A–SSS 3B) and a colour house: <span class="hb hb-Blue">Blue</span> <span class="hb hb-Red">Red</span> <span class="hb hb-Green">Green</span> <span class="hb hb-Yellow">Yellow</span>.</div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Post to class</h3>
+        <label>Full name</label><input id="nwName" placeholder="Given name + surname" />
+        <label>Admission number</label><input id="nwId" placeholder="VCM/26/0xxx" />
+        <label>Class arm</label>
+        <select id="nwCls">${CLASS_LIST.map(c=>`<option>${c}</option>`).join("")}</select>
+        <label>House</label>
+        <select id="nwHouse">
+          <option>Blue</option><option>Red</option><option>Green</option><option>Yellow</option>
+        </select>
+        <button class="btn btn-navy" style="margin-top:12px" onclick="postNew()">Add to class register</button>
+      </div>
+      <div class="card">
+        <h3>Posted this session</h3>
+        <table>
+          <tr><th>Adm. No</th><th>Name</th><th>Arm</th><th>House</th></tr>
+          ${ROLL.filter(s=>s.posted).map(s=>`<tr><td>${s.id}</td><td>${s.name}</td><td>${s.cls}</td><td><span class="hb hb-${s.colorHouse}">${s.colorHouse}</span></td></tr>`).join("")||"<tr><td colspan='4'>None posted from this desk yet.</td></tr>"}
+        </table>
+      </div>
+    </div>`;
+}
+function postNew(){
+  const name=(document.getElementById("nwName").value||"").trim();
+  const id=(document.getElementById("nwId").value||"").trim().toUpperCase();
+  const cls=document.getElementById("nwCls").value;
+  const color=document.getElementById("nwHouse").value;
+  if (!name || !id) { toast("Name and admission number required"); return; }
+  if (ROLL.some(s => s.id===id)) { toast("That admission number already exists"); return; }
+  const subs = cls.startsWith("SSS") ? SSS_SUBS : JSS_SUBS;
+  const blank = subs.map(subject => ({ subject, ca1:0, ca2:0, ca3:0, ca:0, exam:0, total:0 }));
+  ROLL.push({
+    id, name, cls, house: color+" House", colorHouse: color,
+    sex:"—", state:"Benue", fee:"Due", billed:560000, paid:0, att:100,
+    present:0, sessions:22, status:"Boarding", posted:true,
+    terms:[
+      { label:"2025/2026 Second Term (current)", scores:blank, avg:0, current:true }
+    ],
+    discipline:[], history:[{ from:"Admissions", to:cls, when:new Date().toLocaleString("en-NG"), by:(current&&current.name)||"VP Admin" }]
+  });
+  savePosted();
+  currentClass = cls;
+  show("vpadmin");
+  toast(name+" posted to "+cls+" · "+color+" House");
+}
+
+function monitor(){
+  const list = ROLL.filter(s => s.cls===currentClass).sort((a,b)=>a.name.localeCompare(b.name));
+  const present = list.filter(s => s.att>=90).length;
+  const paid = list.filter(s => s.fee==="Paid").length;
+  const flags = list.filter(s => s.discipline.some(d=>d.open)).length;
+  const avgAtt = list.length ? Math.round(list.reduce((a,s)=>a+s.att,0)/list.length) : 0;
+  return `
+    <div class="notice"><b>Admin desk.</b> JSS 1A–SSS 3B. Alphabetical register, admission numbers, attendance, CA1+CA2+CA3 (30%) and exam (70%), previous-term totals, discipline, school fees, and promotion to the next class.</div>
+    <div class="pills" id="classPills">
+      ${CLASS_LIST.map(c => `<button class="${c===currentClass?"on":""}" onclick="switchClass('${c}')">${c} <span class="mini">${ROLL.filter(s=>s.cls===c).length}</span></button>`).join("")}
+      <button onclick="switchClass('Alumni')" class="${currentClass==="Alumni"?"on":""}">Alumni <span class="mini">${ROLL.filter(s=>s.cls==="Alumni").length}</span></button>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span>${currentClass} on roll</span><b>${list.length}</b><em>alphabetical below</em></div>
+      <div class="kpi"><span>Class attendance</span><b>${avgAtt}%</b><em>${present} at 90%+</em></div>
+      <div class="kpi"><span>Fees cleared</span><b>${paid}/${list.length||0}</b><em>result hold on the rest</em></div>
+      <div class="kpi"><span>Open discipline</span><b>${flags}</b><em>Dean of Discipline</em></div>
+    </div>
+    <div class="toolbar">
+      <input id="monQ" placeholder="Filter this class by name or admission no." oninput="renderMonTable()" />
+      <button class="btn btn-navy btn-sm" onclick="promoteClass()">Promote whole ${currentClass}</button>
+      <button class="btn btn-ghost btn-sm" onclick="window.print()">Print register</button>
+    </div>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Admission No</th><th>Student (A–Z)</th>
+            <th>Attendance</th><th>Current avg</th><th>Prev. terms</th>
+            <th>Fees</th><th>Discipline</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="monBody">${monRows(list)}</tbody>
+      </table>
+    </div>`;
+}
+function switchClass(c){ currentClass = c; show("monitor"); }
+function monRows(list){
+  return list.map((s,i) => {
+    const cur = s.terms.find(t=>t.current) || s.terms[s.terms.length-1];
+    const prev = s.terms.filter(t=>!t.current).map(t=>t.avg+"%").join(" · ") || "—";
+    const feeCls = s.fee==="Paid"?"ok":s.fee==="Part"?"due":"off";
+    const open = s.discipline.some(d=>d.open);
+    const attCls = s.att>=95?"ok":s.att>=85?"due":"off";
+    return `<tr>
+      <td>${i+1}</td>
+      <td>${s.id}</td>
+      <td><b>${s.name}</b><div class="mini">${s.house} · ${s.sex}</div></td>
+      <td><span class="tag ${attCls}">${s.att}%</span><div class="mini">${s.present}/${s.sessions} days</div></td>
+      <td><b>${cur.avg}%</b></td>
+      <td class="mini">${prev}</td>
+      <td><span class="tag ${feeCls}">${s.fee}</span><div class="mini">₦${s.paid.toLocaleString()} / ₦${s.billed.toLocaleString()}</div></td>
+      <td>${open?'<span class="tag due">Open</span>':'<span class="tag ok">Clear</span>'}</td>
+      <td>
+        <button class="btn btn-navy btn-sm" onclick="openFile('${s.id}')">File</button>
+        <button class="btn btn-ghost btn-sm" onclick="openPromote('${s.id}')">Move</button>
+      </td>
+    </tr>`;
+  }).join("") || `<tr><td colspan="9">No students in ${currentClass}.</td></tr>`;
+}
+function renderMonTable(){
+  const q = (document.getElementById("monQ")?.value||"").toLowerCase();
+  const list = ROLL.filter(s => s.cls===currentClass && (s.name+s.id).toLowerCase().includes(q))
+    .sort((a,b)=>a.name.localeCompare(b.name));
+  const body = document.getElementById("monBody");
+  if (body) body.innerHTML = monRows(list);
+}
+function openFile(id){
+  const s = ROLL.find(r => r.id===id);
+  if (!s) return;
+  const cur = s.terms.find(t=>t.current) || s.terms[s.terms.length-1];
+  const scoreTables = s.terms.map(t => `
+    <h3>${t.label} · average ${t.avg}%</h3>
+    <table>
+      <tr><th>Subject</th><th>CA1 /10</th><th>CA2 /10</th><th>CA3 /10</th><th>CA 30%</th><th>Exam /70</th><th>Total /100</th><th>Grade</th></tr>
+      ${t.scores.map(x => `<tr><td>${x.subject}</td><td>${x.ca1}</td><td>${x.ca2}</td><td>${x.ca3}</td><td><b>${x.ca}</b></td><td>${x.exam}</td><td><b>${x.total}</b></td><td>${grade(x.total)}</td></tr>`).join("")}
+    </table>`).join("");
+  const disc = s.discipline.length ? s.discipline.map(d=>`<div class="chip"><b>${d.date}</b> — ${d.note}<br/>Action: ${d.action} · ${d.open?"Open":"Closed"}</div>`).join("") : "<p class='fine'>No disciplinary record.</p>";
+  const hist = s.history.length ? s.history.map(h=>`<div class="chip">${h.from} → <b>${h.to}</b> · ${h.when} · ${h.by}</div>`).join("") : "<p class='fine'>No class changes yet.</p>";
+  openModal(`
+    <div style="display:flex;justify-content:space-between;align-items:start;gap:12px">
+      <div>
+        <h2 style="margin-bottom:4px">${s.name}</h2>
+        <p class="mini">${s.id} · ${s.cls} · ${s.house}</p>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal()">Close</button>
+    </div>
+    <div class="grid-3" style="margin:12px 0">
+      <div class="card"><span class="mini">Attendance</span><b style="display:block">${s.att}%</b>${s.present}/${s.sessions} days</div>
+      <div class="card"><span class="mini">Fees</span><b style="display:block">${s.fee}</b>₦${s.paid.toLocaleString()} paid of ₦${s.billed.toLocaleString()}</div>
+      <div class="card"><span class="mini">Current average</span><b style="display:block">${cur.avg}%</b>${s.fee==="Paid"?"Results released":"Result hold"}</div>
+    </div>
+    ${scoreTables}
+    <h3 style="margin-top:14px">Disciplinary record</h3>
+    ${disc}
+    <h3 style="margin-top:14px">Class movement</h3>
+    ${hist}
+    <div class="toolbar" style="margin-top:12px">
+      <button class="btn btn-navy btn-sm" onclick="closeModal();openPromote('${s.id}')">Change class / promote</button>
+    </div>
+  `);
+}
+function grade(t){ return t>=75?"A":t>=65?"B":t>=55?"C":t>=45?"D":t>=40?"E":"F"; }
+function openPromote(id){
+  const s = ROLL.find(r => r.id===id);
+  if (!s) return;
+  const opts = CLASS_LIST.concat("Alumni").map(c => `<option ${c===s.cls?"selected":""} ${c===NEXT_CLASS[s.cls]?"data-next=1":""}>${c}</option>`).join("");
+  openModal(`
+    <h2>Move ${s.name}</h2>
+    <p class="mini">${s.id} is currently in <b>${s.cls}</b>. Suggested next class: <b>${NEXT_CLASS[s.cls]||"—"}</b></p>
+    <label>New class</label>
+    <select id="newCls">${opts}</select>
+    <label>Reason</label>
+    <select id="why">
+      <option>End-of-session promotion</option>
+      <option>Mid-session transfer of arm (A ↔ B)</option>
+      <option>Repeat class</option>
+      <option>Graduation</option>
+    </select>
+    <div class="toolbar" style="margin-top:14px">
+      <button class="btn btn-navy" onclick="doPromote('${s.id}')">Save class change</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+  `);
+}
+function doPromote(id){
+  const s = ROLL.find(r => r.id===id);
+  const to = document.getElementById("newCls").value;
+  if (!s || to===s.cls) { toast("Class unchanged"); return; }
+  const rec = { from:s.cls, to, when: new Date().toLocaleString("en-NG"), by: (current&&current.name)||"Admin" };
+  s.history.push(rec);
+  s.cls = to;
+  saveMoves();
+  closeModal();
+  currentClass = to;
+  show("monitor");
+  toast(s.name + " moved to " + to);
+}
+function promoteClass(){
+  if (currentClass==="Alumni") { toast("Alumni stay in Alumni"); return; }
+  const next = NEXT_CLASS[currentClass];
+  if (!confirm("Promote every student in "+currentClass+" to "+next+"?")) return;
+  ROLL.filter(s => s.cls===currentClass).forEach(s => {
+    s.history.push({ from:s.cls, to:next, when:new Date().toLocaleString("en-NG"), by:(current&&current.name)||"Admin" });
+    s.cls = next;
+  });
+  saveMoves();
+  currentClass = next;
+  show("monitor");
+  toast("Class promoted to " + next);
+}
+
+function academics(){
+  return `
+    <div class="kpis">
+      <div class="kpi"><span>Subjects live</span><b>18</b><em>WAEC / NECO aligned</em></div>
+      <div class="kpi"><span>CA weight</span><b>30%</b><em>CA1 + CA2 + CA3</em></div>
+      <div class="kpi"><span>Exam weight</span><b>70%</b><em>term examination</em></div>
+      <div class="kpi"><span>Report cards</span><b>Ready</b><em>print / parent portal</em></div>
+    </div>
+    <div class="card">
+      <h3>Sample mark book — SSS 2 Science · Mathematics (Mr. T.T. Tyohuna)</h3>
+      <table>
+        <tr><th>Student</th><th>CA1 /10</th><th>CA2 /10</th><th>CA3 /10</th><th>CA 30%</th><th>Exam /70</th><th>Total</th><th>Grade</th><th>Position</th></tr>
+        <tr><td>Terhemba Doose</td><td>9</td><td>8</td><td>9</td><td>26</td><td>60</td><td>86</td><td>A</td><td>2</td></tr>
+        <tr><td>Nguhemen Ruth</td><td>8</td><td>7</td><td>8</td><td>23</td><td>52</td><td>75</td><td>B</td><td>8</td></tr>
+        <tr><td>Aondohemba David</td><td>9</td><td>10</td><td>9</td><td>28</td><td>63</td><td>91</td><td>A</td><td>1</td></tr>
+      </table>
+      <p class="fine" style="margin-top:8px">College scale: three CAs of 10 marks each (30%), examination 70%, total 100. Grades: A 75–100 · B 65–74 · C 55–64 · D 45–54 · E 40–44 · F 0–39.</p>
+    </div>`;
+}
+
+function exams(){
+  return `
+    <div class="grid-2">
+      <div class="card">
+        <h3>External examinations</h3>
+        <table>
+          <tr><th>Body</th><th>Class</th><th>Centre</th><th>Status</th></tr>
+          <tr><td>WAEC WASSCE</td><td>SSS 3</td><td>4081345</td><td><span class="tag info">Registration</span></td></tr>
+          <tr><td>NECO SSCE</td><td>SSS 3</td><td>Makurdi</td><td><span class="tag info">Planning</span></td></tr>
+          <tr><td>BECE / JSCE</td><td>JSS 3</td><td>College</td><td><span class="tag ok">Internal ready</span></td></tr>
+          <tr><td>JAMB UTME</td><td>SSS 3</td><td>CBT centres</td><td><span class="tag ok">2025 closed — 302 avg</span></td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Why this module sells</h3>
+        <p>Vaatia already publishes standout JAMB outcomes. Nexus keeps a candidate file: subjects, mock trend, registration PIN custody, photo compliance, and university placement follow-up — so the Principal can brief the Board without spreadsheets.</p>
+      </div>
+    </div>`;
+}
+
+function attendance(){
+  return `
+    <div class="card">
+      <h3>Dual attendance — class and hostel</h3>
+      <table>
+        <tr><th>Group</th><th>Expected</th><th>Present</th><th>Sick bay</th><th>Exeats</th><th>%</th></tr>
+        <tr><td>JSS 1 / Basic 7</td><td>58</td><td>56</td><td>1</td><td>1</td><td>96.6</td></tr>
+        <tr><td>SSS 3 Science</td><td>24</td><td>24</td><td>0</td><td>0</td><td>100</td></tr>
+        <tr><td>Akume House lights-out</td><td>64</td><td>64</td><td>0</td><td>0</td><td>100</td></tr>
+        <tr><td>Integrity House lights-out</td><td>61</td><td>60</td><td>1</td><td>0</td><td>98.4</td></tr>
+      </table>
+      <p class="fine" style="margin-top:8px">Unexplained absence after second period notifies form tutor, Dean of Discipline, and parent window.</p>
+    </div>`;
+}
+
+function fees(){
+  return `
+    <div class="kpis">
+      <div class="kpi"><span>Billed this term</span><b>₦204.8m</b><em>illustrative model</em></div>
+      <div class="kpi"><span>Collected</span><b>₦186.4m</b><em>91%</em></div>
+      <div class="kpi"><span>Outstanding</span><b>₦18.4m</b><em>23 accounts</em></div>
+      <div class="kpi"><span>Form sales YTD</span><b>₦860k</b><em>86 × ₦10,000</em></div>
+    </div>
+    <div class="card">
+      <h3>Fee heads (configurable — figures are demo)</h3>
+      <table>
+        <tr><th>Head</th><th>JSS boarding</th><th>SSS boarding</th><th>Notes</th></tr>
+        <tr><td>Tuition</td><td>₦285,000</td><td>₦310,000</td><td>Termly</td></tr>
+        <tr><td>Boarding &amp; feeding</td><td>₦240,000</td><td>₦240,000</td><td>Hostel + kitchen</td></tr>
+        <tr><td>Development levy</td><td>₦35,000</td><td>₦35,000</td><td>Labs / solar / sports</td></tr>
+        <tr><td>ICT &amp; robotics</td><td>₦18,000</td><td>₦22,000</td><td>Skills &amp; labs</td></tr>
+        <tr><td>Application form</td><td colspan="2">₦10,000</td><td>Published 2026/2027</td></tr>
+      </table>
+      <p class="fine" style="margin-top:8px">Production build connects bank transfers, POS, and receipts. Defaulters list goes to Bursar and Principal only. Scholarship and staff-child concessions sit on the same ledger.</p>
+      <div class="toolbar" style="margin-top:10px">
+        <button class="btn btn-navy btn-sm" onclick="toast('23 reminder notes packed for WhatsApp')">Nudge defaulters</button>
+        <button class="btn btn-ghost btn-sm" onclick="toast('Result hold ON for unpaid accounts')">Arm result hold</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Recent receipts</h3>
+      <table>
+        <tr><th>Receipt</th><th>Student</th><th>Head</th><th>Amount</th><th>Channel</th></tr>
+        <tr><td>R-88421</td><td>Terhemba Doose</td><td>First term balance</td><td>₦120,000</td><td>Transfer</td></tr>
+        <tr><td>R-88418</td><td>Kwaghgba Peter</td><td>Acceptance + commitment</td><td>₦75,000</td><td>POS</td></tr>
+      </table>
+    </div>`;
+}
+
+function hostel(){
+  return `
+    <div class="grid-3">
+      ${[["Akume House","64","64","Housemaster on duty"],["Unity House","62","61","1 sick bay"],["Service House","60","60","Full"],["Integrity House","61","60","1 exeat"],["Excellence House","65","65","Prep in hall"]].map(([h,c,p,n])=>`<div class="card"><h3>${h}</h3><b>${p}/${c}</b><p class="fine">${n}</p></div>`).join("")}
+    </div>
+    <div class="card">
+      <h3>Boarding operations</h3>
+      <p>Vaatia is a full boarding college with structured prep, skills workshops, sports, and solar power. Nexus tracks bed spaces, exeats, visiting days, kit inventory, and house points. Lights-out roll is a first-class record — not a paper register.</p>
+    </div>`;
+}
+
+function discipline(){
+  return `
+    <div class="card">
+      <h3>Dean of Discipline — Mr. A. Shawon</h3>
+      <table>
+        <tr><th>Date</th><th>Student</th><th>Note</th><th>Action</th><th>Status</th></tr>
+        <tr><td>28 Aug</td><td>SSS 1 student</td><td>Late to prep</td><td>House warning</td><td><span class="tag due">Open</span></td></tr>
+        <tr><td>26 Aug</td><td>JSS 2 student</td><td>Uniform incomplete</td><td>Corrected same day</td><td><span class="tag ok">Closed</span></td></tr>
+      </table>
+      <p class="fine" style="margin-top:8px">Character records stay private to Dean, Principal, and form tutor. Parents see only items the Dean releases.</p>
+    </div>`;
+}
+
+function clinic(){
+  return `
+    <div class="card">
+      <h3>Sick bay register</h3>
+      <table>
+        <tr><th>Time</th><th>Student</th><th>Complaint</th><th>Nurse action</th><th>Outcome</th></tr>
+        <tr><td>07:40</td><td>JSS 3 · Mlumun Faith</td><td>Headache</td><td>Rest + observation</td><td>Returned to class</td></tr>
+        <tr><td>11:15</td><td>SSS 2 · Nguhemen Ruth</td><td>Mild fever</td><td>Temperature logged, parent alerted</td><td>Under review</td></tr>
+      </table>
+      <p class="fine" style="margin-top:8px">Admission medical forms from the parent portal feed this file. Access limited to clinic, Principal, and the student’s parent.</p>
+    </div>`;
+}
+
+function staff(){
+  return `
+    <div class="card">
+      <h3>Departments mapped to the public management team</h3>
+      <table>
+        <tr><th>Department</th><th>Lead</th><th>Focus</th></tr>
+        <tr><td>Science &amp; Technology</td><td>Mr. E.A. Otache</td><td>Labs, robotics, TVET</td></tr>
+        <tr><td>Languages</td><td>Mrs. V.U. Mashika</td><td>English, literature, local languages</td></tr>
+        <tr><td>Mathematics &amp; Computer Science</td><td>Mr. T.T. Tyohuna</td><td>Maths, ICT, CBT</td></tr>
+        <tr><td>Arts &amp; Social Sciences</td><td>Mr. S. Takor</td><td>Govt, econ, CRS, civic</td></tr>
+        <tr><td>Security</td><td>Mr. E.T. Nyigba</td><td>Gate, hostel perimeter, visitors</td></tr>
+      </table>
+    </div>`;
+}
+
+function timetable(){
+  return `
+    <div class="card">
+      <h3>Monday — SSS 2 Science (extract)</h3>
+      <table>
+        <tr><th>Period</th><th>Time</th><th>Subject</th><th>Room</th></tr>
+        <tr><td>1</td><td>07:50–08:30</td><td>Mathematics</td><td>Block C2</td></tr>
+        <tr><td>2</td><td>08:30–09:10</td><td>Physics</td><td>Lab 1</td></tr>
+        <tr><td>3</td><td>09:10–09:50</td><td>English Language</td><td>Block C2</td></tr>
+        <tr><td>—</td><td>09:50–10:10</td><td>Break</td><td>—</td></tr>
+        <tr><td>4</td><td>10:10–10:50</td><td>Chemistry</td><td>Lab 2</td></tr>
+        <tr><td>5</td><td>10:50–11:30</td><td>Computer / Robotics</td><td>ICT Centre</td></tr>
+      </table>
+    </div>`;
+}
+
+function comms(){
+  return `
+    <div class="card">
+      <h3>Circulars</h3>
+      <div class="chip"><b>Visiting day</b> — Second Saturday of the month. Parents report at the gate with ID.</div>
+      <div class="chip"><b>CA3</b> — Last continuous assessment (10 of 30). Opens Monday. CBT mocks in ICT.</div>
+      <div class="chip"><b>2026/2027 entrance</b> — Supplementary forms via parents.vaatiacollege.com.ng</div>
+    </div>`;
+}
+
+function parentv(){
+  return `
+    <div class="notice">Parent view for Mrs. M. Terhemba · ward: Terhemba Doose · SSS 2 Science · Akume House</div>
+    <div class="kpis">
+      <div class="kpi"><span>Fee status</span><b>Paid</b><em>First term cleared</em></div>
+      <div class="kpi"><span>Attendance</span><b>98%</b><em>this term</em></div>
+      <div class="kpi"><span>Current average</span><b>86%</b><em>position 2</em></div>
+      <div class="kpi"><span>Pickup PIN</span><b>482190</b><em>show at the gate</em></div>
+    </div>
+    <div class="card">
+      <h3>Today for this family</h3>
+      <div class="chip">Dinner tonight: Yam and vegetable soup</div>
+      <div class="chip">Visiting day: Saturday 09:00–16:00 · bring ID</div>
+      <div class="chip">Mathematics CA3 starts Monday · CAs = 30%, exam = 70%</div>
+    </div>
+    <div class="card">
+      <h3>Latest results</h3>
+      <table>
+        <tr><th>Subject</th><th>CA1</th><th>CA2</th><th>CA3</th><th>CA 30%</th><th>Exam 70%</th><th>Total</th><th>Grade</th></tr>
+        <tr><td>Mathematics</td><td>9</td><td>8</td><td>9</td><td>26</td><td>60</td><td>86</td><td>A</td></tr>
+        <tr><td>Physics</td><td>8</td><td>9</td><td>8</td><td>25</td><td>55</td><td>80</td><td>A</td></tr>
+        <tr><td>English</td><td>8</td><td>7</td><td>8</td><td>23</td><td>51</td><td>74</td><td>B</td></tr>
+      </table>
+    </div>`;
+}
+
+function dossier(){
+  return `
+    <div class="notice">One screen the Principal opens before a parent meeting. Fees, house, health flag, results, and messages in one file.</div>
+    <div class="toolbar">
+      <select id="dosPick" onchange="pickStudent(this.value)">
+        ${STUDENTS.map(s=>`<option value="${s.id}">${s.name} · ${s.id}</option>`).join("")}
+      </select>
+      <button class="btn btn-navy btn-sm" onclick="show('reportcard')">Print report card</button>
+      <button class="btn btn-ghost btn-sm" onclick="show('ids')">Print ID card</button>
+    </div>
+    <div id="dosBody">${dossierHtml(STUDENTS[0])}</div>`;
+}
+function pickStudent(id){
+  const s = STUDENTS.find(x => x.id===id) || STUDENTS[0];
+  const body = document.getElementById("dosBody");
+  if (body) body.innerHTML = dossierHtml(s);
+}
+function dossierHtml(s){
+  const hold = s.fee!=="Paid";
+  return `
+    <div class="grid-2">
+      <div class="card ${hold?"hold":""}">
+        <h3>${s.name}</h3>
+        <table>
+          <tr><td>Admission</td><td>${s.id}</td></tr>
+          <tr><td>Class</td><td>${s.cls}</td></tr>
+          <tr><td>House</td><td>${s.house}</td></tr>
+          <tr><td>State of origin</td><td>${s.state}</td></tr>
+          <tr><td>Status</td><td>${s.status}</td></tr>
+          <tr><td>Attendance</td><td>${s.att}%</td></tr>
+          <tr><td>Fees</td><td><span class="tag ${s.fee==="Paid"?"ok":s.fee==="Part"?"due":"off"}">${s.fee}</span>${hold?" · result hold armed":""}</td></tr>
+          <tr><td>JAMB</td><td>${s.jamb}</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Guardians & alerts</h3>
+        <p>Primary: recorded on file<br/>Channel: WhatsApp first, SMS fallback<br/>Last message: “Visiting day is Saturday 09:00–16:00.”</p>
+        <button class="btn btn-navy btn-sm" style="margin-top:10px" onclick="show('messages')">Compose to parent</button>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card"><h3>Academics</h3><p>Term average 86% · Position 2<br/>Strong in Maths and Physics.</p></div>
+      <div class="card"><h3>Boarding</h3><p>Bed A-12 · Prep attendance 100%<br/>No open discipline file.</p></div>
+      <div class="card"><h3>Clinic</h3><p>Last visit: none this week.<br/>Admission medical form on file.</p></div>
+    </div>`;
+}
+
+function reportcard(){
+  return `
+    <div class="toolbar">
+      <select id="rcPick">${STUDENTS.map(s=>`<option>${s.name} · ${s.cls}</option>`).join("")}</select>
+      <button class="btn btn-navy btn-sm" onclick="window.print()">Print / PDF</button>
+      <button class="btn btn-ghost btn-sm" onclick="toast('Queued to parent window and WhatsApp pack')">Release to parent</button>
+    </div>
+    <div class="report" id="rcSheet">
+      <div class="crest" style="margin:0 auto 8px;width:64px;height:64px"><img src="vcm-logo.png" alt="Vaatia College logo" onerror="this.src='https://vaatiacollege.com.ng/Media%20Content/vcm-logo.png'" /></div>
+      <h1>VAATIA COLLEGE MAKURDI</h1>
+      <p style="text-align:center;letter-spacing:3px;font-size:.75rem;color:#38bdf8">KNOWLEDGE &amp; SERVICE</p>
+      <p style="text-align:center;font-size:.8rem">No. 8 Chia Ikima Street, Off Sen. George Akume Way, Makurdi · P.O. Box 1354</p>
+      <div class="goldline"></div>
+      <p style="text-align:center"><b>TERMINAL REPORT</b> · First Term 2025/2026</p>
+      <table style="margin:10px 0">
+        <tr><td>Name: <b>Terhemba Doose</b></td><td>Adm: VCM/25/0142</td></tr>
+        <tr><td>Class: SSS 2 Science</td><td>House: Akume House</td></tr>
+      </table>
+      <table>
+        <tr><th>Subject</th><th>CA1</th><th>CA2</th><th>CA3</th><th>CA 30%</th><th>Exam 70%</th><th>Total</th><th>Grade</th><th>Pos</th></tr>
+        <tr><td>Mathematics</td><td>9</td><td>8</td><td>9</td><td>26</td><td>60</td><td>86</td><td>A</td><td>2</td></tr>
+        <tr><td>English Language</td><td>8</td><td>7</td><td>8</td><td>23</td><td>51</td><td>74</td><td>B</td><td>6</td></tr>
+        <tr><td>Physics</td><td>8</td><td>9</td><td>8</td><td>25</td><td>55</td><td>80</td><td>A</td><td>3</td></tr>
+        <tr><td>Chemistry</td><td>8</td><td>8</td><td>8</td><td>24</td><td>53</td><td>77</td><td>A</td><td>4</td></tr>
+        <tr><td>Biology</td><td>9</td><td>8</td><td>8</td><td>25</td><td>53</td><td>78</td><td>A</td><td>3</td></tr>
+        <tr><td>Civic Education</td><td>9</td><td>9</td><td>8</td><td>26</td><td>58</td><td>84</td><td>A</td><td>1</td></tr>
+      </table>
+      <p style="margin-top:12px"><b>Average:</b> 79.8% &nbsp; <b>Class position:</b> 2 of 24 &nbsp; <b>Attendance:</b> 98%</p>
+      <p><b>Form tutor:</b> A focused boarder who leads quietly and keeps house standards. Keep the JAMB mock pace.</p>
+      <p><b>Principal:</b> Knowledge &amp; Service. Continue this trajectory. — Mr. T.O. Vaatia</p>
+      <p class="fine">Fee status: PAID · Result released. Unpaid accounts stay on bursary hold.</p>
+    </div>`;
+}
+
+function cbt(){
+  return `
+    <div class="notice">Entrance and mock engine in the same product the college already uses for admission CBT. Demo paper: 5 questions · 3 minutes · instant score.</div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Live paper — Basic 7 entrance sample</h3>
+        <div id="cbtBox">
+          <div class="cbtq"><b>1.</b> 24 × 15 =<br/>
+            <label><input type="radio" name="q1" value="0"> 310</label>
+            <label><input type="radio" name="q1" value="1"> 360</label>
+            <label><input type="radio" name="q1" value="0"> 340</label>
+          </div>
+          <div class="cbtq"><b>2.</b> Antonym of <i>scarce</i><br/>
+            <label><input type="radio" name="q2" value="1"> abundant</label>
+            <label><input type="radio" name="q2" value="0"> rare</label>
+            <label><input type="radio" name="q2" value="0"> little</label>
+          </div>
+          <div class="cbtq"><b>3.</b> Capital of Benue State<br/>
+            <label><input type="radio" name="q3" value="0"> Gboko</label>
+            <label><input type="radio" name="q3" value="1"> Makurdi</label>
+            <label><input type="radio" name="q3" value="0"> Otukpo</label>
+          </div>
+          <div class="cbtq"><b>4.</b> 3/4 + 1/2 =<br/>
+            <label><input type="radio" name="q4" value="1"> 5/4</label>
+            <label><input type="radio" name="q4" value="0"> 4/6</label>
+            <label><input type="radio" name="q4" value="0"> 2/6</label>
+          </div>
+          <div class="cbtq"><b>5.</b> A body at rest stays at rest unless acted on. This is Newton’s<br/>
+            <label><input type="radio" name="q5" value="1"> First law</label>
+            <label><input type="radio" name="q5" value="0"> Second law</label>
+            <label><input type="radio" name="q5" value="0"> Third law</label>
+          </div>
+          <button class="btn btn-navy" onclick="gradeCbt()">Submit paper</button>
+          <p id="cbtRes" class="fine"></p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Bank & analytics</h3>
+        <p>Item bank tags: WAEC, NECO, JAMB, entrance. Auto-mark, item difficulty, malpractice lock (tab-switch count). Scores flow into the admissions pipeline and SSS mock tracker.</p>
+        <table>
+          <tr><th>Paper</th><th>Sat</th><th>Mean</th></tr>
+          <tr><td>2026 Basic 7 mock A</td><td>64</td><td>68%</td></tr>
+          <tr><td>SSS 3 JAMB mock 2</td><td>41</td><td>289</td></tr>
+        </table>
+      </div>
+    </div>`;
+}
+function gradeCbt(){
+  let s = 0;
+  for (let i=1;i<=5;i++){
+    const p = document.querySelector(`input[name=q${i}]:checked`);
+    if (p && p.value==="1") s++;
+  }
+  document.getElementById("cbtRes").textContent = "Score: " + s + " / 5  ·  " + (s>=3?"Recommended for offer review":"Below cut-off — schedule supplementary");
+  toast("CBT script saved to candidate file");
+}
+
+function exeat(){
+  return `
+    <div class="kpis">
+      <div class="kpi"><span>Open exeats</span><b>3</b><em>return by Sunday 17:00</em></div>
+      <div class="kpi"><span>Visiting day</span><b>Sat</b><em>09:00–16:00</em></div>
+      <div class="kpi"><span>Passes printed</span><b>18</b><em>this month</em></div>
+      <div class="kpi"><span>Overdue</span><b>0</b><em>gate will block</em></div>
+    </div>
+    <div class="card">
+      <h3>Exeat desk</h3>
+      <table>
+        <tr><th>Student</th><th>Reason</th><th>Out</th><th>Due back</th><th>Escort</th><th>Gate</th></tr>
+        <tr><td>Aondohemba David</td><td>Family event</td><td>Fri 16:00</td><td>Sun 17:00</td><td>Father</td><td><span class="tag info">Out</span></td></tr>
+        <tr><td>Nguhemen Ruth</td><td>Clinic follow-up</td><td>Today 10:00</td><td>Today 14:00</td><td>Aunt</td><td><span class="tag due">Expected</span></td></tr>
+      </table>
+      <button class="btn btn-navy btn-sm" style="margin-top:10px" onclick="toast('Exeat pass queued for gate printer')">Issue pass</button>
+    </div>`;
+}
+
+function kitchen(){
+  return `
+    <div class="notice">Boarding parents judge a college by food as much as WAEC. Publish the week’s menu to the parent window every Sunday.</div>
+    <div class="card">
+      <h3>This week — college kitchen</h3>
+      <table>
+        <tr><th>Day</th><th>Breakfast</th><th>Lunch</th><th>Dinner</th></tr>
+        <tr><td>Monday</td><td>Bread, egg, tea</td><td>Jollof rice &amp; chicken</td><td>Yam &amp; vegetable soup</td></tr>
+        <tr><td>Tuesday</td><td>Pap &amp; akara</td><td>Pounded yam &amp; egusi</td><td>Spaghetti</td></tr>
+        <tr><td>Wednesday</td><td>Oats</td><td>Rice &amp; stew</td><td>Beans &amp; plantain</td></tr>
+        <tr><td>Thursday</td><td>Bread &amp; beans</td><td>Semo &amp; okra</td><td>Fried rice</td></tr>
+        <tr><td>Friday</td><td>Custard</td><td>Special rice</td><td>Potatoes &amp; fish</td></tr>
+        <tr><td>Saturday</td><td>Visiting-day buffet</td><td>Family lunch window</td><td>Light supper</td></tr>
+        <tr><td>Sunday</td><td>After-chapel breakfast</td><td>Rice &amp; stew</td><td>Soup night</td></tr>
+      </table>
+      <button class="btn btn-navy btn-sm" style="margin-top:10px" onclick="toast('Menu pushed to 312 parent numbers')">Publish to parents</button>
+    </div>`;
+}
+
+function gate(){
+  return `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Gate log — CSO Mr. E.T. Nyigba</h3>
+        <table>
+          <tr><th>Time</th><th>Name</th><th>Purpose</th><th>Action</th></tr>
+          <tr><td>06:40</td><td>Kitchen supplies</td><td>Delivery</td><td>Cleared</td></tr>
+          <tr><td>09:12</td><td>Mrs. Terhemba</td><td>Scheduled visit</td><td>Pass issued</td></tr>
+          <tr><td>11:05</td><td>Unknown rider</td><td>Unscheduled</td><td>Turned away</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Pickup PIN</h3>
+        <p>Parent shows a one-time 6-digit PIN from the parent window. Gate staff match name + PIN + photo. No PIN, no student.</p>
+        <p style="font-size:1.6rem;letter-spacing:6px;font-weight:800">4 8 2 1 9 0</p>
+        <button class="btn btn-navy btn-sm" onclick="toast('New PIN sent to parent window')">Rotate PIN</button>
+      </div>
+    </div>`;
+}
+
+function library(){
+  return `
+    <div class="card">
+      <h3>Issue desk</h3>
+      <table>
+        <tr><th>Title</th><th>Student</th><th>Out</th><th>Due</th><th>Status</th></tr>
+        <tr><td>New School Physics</td><td>Terhemba Doose</td><td>12 Aug</td><td>02 Sep</td><td><span class="tag ok">On time</span></td></tr>
+        <tr><td>Exam Focus English</td><td>Shagba Emmanuel</td><td>01 Aug</td><td>22 Aug</td><td><span class="tag off">Overdue</span></td></tr>
+      </table>
+      <p class="fine" style="margin-top:8px">Overdue titles block further issues and can notify the house master.</p>
+    </div>`;
+}
+
+function store(){
+  return `
+    <div class="card">
+      <h3>Kit & store</h3>
+      <table>
+        <tr><th>Item</th><th>Stock</th><th>Reorder</th><th>Issued this term</th></tr>
+        <tr><td>House vest — Akume</td><td>18</td><td>10</td><td>46</td></tr>
+        <tr><td>Lab coat</td><td>7</td><td>12</td><td>31</td></tr>
+        <tr><td>Mattress cover</td><td>22</td><td>15</td><td>9</td></tr>
+      </table>
+      <p class="fine" style="margin-top:8px">New Basic 7 intake auto-builds a kit list: uniform, bedding, toiletries, textbooks.</p>
+    </div>`;
+}
+
+function calendar(){
+  return `
+    <div class="card">
+      <h3>First Term 2025/2026</h3>
+      <table>
+        <tr><th>Date</th><th>Event</th><th>Owner</th></tr>
+        <tr><td>Mon 1 Sep</td><td>CA3 window opens (CAs close at 30%)</td><td>VP Academics</td></tr>
+        <tr><td>Sat 6 Sep</td><td>Visiting day</td><td>VP Admin / Gate</td></tr>
+        <tr><td>Fri 19 Sep</td><td>Inter-house sports heats</td><td>Sports / Houses</td></tr>
+        <tr><td>Mon 6 Oct</td><td>SSS 3 mock 3</td><td>Dean of Studies</td></tr>
+        <tr><td>Fri 5 Dec</td><td>Term ends / travel day</td><td>Hostel + Bursary</td></tr>
+      </table>
+    </div>`;
+}
+
+function alumni(){
+  return `
+    <div class="kpis">
+      <div class="kpi"><span>Class of 2025</span><b>41</b><em>UTME sat</em></div>
+      <div class="kpi"><span>300+</span><b>19</b><em>46.3%</em></div>
+      <div class="kpi"><span>Best</span><b>361</b><em>college record year</em></div>
+      <div class="kpi"><span>Placement filed</span><b>27</b><em>university choices</em></div>
+    </div>
+    <div class="card">
+      <h3>University placement tracker</h3>
+      <table>
+        <tr><th>Alumnus</th><th>UTME</th><th>First choice</th><th>Status</th></tr>
+        <tr><td>Aondohemba David</td><td>328</td><td>Medicine — Jos</td><td><span class="tag info">Awaiting</span></td></tr>
+        <tr><td>Shagba Emmanuel</td><td>301</td><td>Law — Makurdi</td><td><span class="tag ok">Offered</span></td></tr>
+      </table>
+      <p class="fine" style="margin-top:8px">This is the slide the Board wants every July. Nexus keeps it without a side spreadsheet.</p>
+    </div>`;
+}
+
+function messages(){
+  return `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Compose</h3>
+        <label>Audience</label>
+        <select id="msgAud">
+          <option>All parents</option>
+          <option>SSS 3 parents</option>
+          <option>Fee defaulters only</option>
+          <option>Akume House</option>
+          <option>Single parent — Terhemba</option>
+        </select>
+        <label>Channel</label>
+        <select><option>WhatsApp first</option><option>SMS</option><option>Parent window only</option></select>
+        <label>Message</label>
+        <textarea id="msgBody">Good day from Vaatia College Makurdi. Visiting day is Saturday 6 September, 09:00–16:00. Kindly bring a valid ID. Knowledge & Service.</textarea>
+        <button class="btn btn-gold" onclick="sendMsg()">Queue blast</button>
+      </div>
+      <div class="card">
+        <h3>Outbox</h3>
+        <div class="chip"><b>Bursary</b> — 23 fee reminders queued · estimated ₦0.00 in this demo</div>
+        <div class="chip"><b>Clinic</b> — 1 parent alert: mild fever observation</div>
+        <div class="chip"><b>Admissions</b> — 12 “complete your documents” nudges</div>
+        <div id="outbox"></div>
+      </div>
+    </div>`;
+}
+function sendMsg(){
+  const aud = document.getElementById("msgAud").value;
+  const box = document.getElementById("outbox");
+  if (box) box.innerHTML = `<div class="chip"><b>Just now</b> — ${aud}: message queued. Delivery receipts will show in production.</div>` + box.innerHTML;
+  toast("Message packed for " + aud);
+  const n = document.getElementById("nCount");
+  if (n) n.textContent = String(Number(n.textContent||"0")+1);
+}
+
+function ids(){
+  const s = STUDENTS[0];
+  return `
+    <div class="toolbar">
+      <select>${STUDENTS.map(x=>`<option>${x.name}</option>`).join("")}</select>
+      <button class="btn btn-navy btn-sm" onclick="window.print()">Print card</button>
+      <button class="btn btn-ghost btn-sm" onclick="toast('Batch of 58 Basic 7 cards sent to printer')">Print whole class</button>
+    </div>
+    <div class="idcard">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div><b>VAATIA COLLEGE</b><div style="font-size:.65rem;letter-spacing:2px;color:#38bdf8">MAKURDI · BOARDING</div></div>
+        <div class="crest" style="width:40px;height:40px;padding:3px"><img src="vcm-logo.png" alt="VCM" onerror="this.src='https://vaatiacollege.com.ng/Media%20Content/vcm-logo.png'" /></div>
+      </div>
+      <div class="row">
+        <div class="avatar">TD</div>
+        <div>
+          <div style="font-size:1.05rem;font-weight:800">${s.name}</div>
+          <div>${s.cls}</div>
+          <div style="font-size:.78rem">${s.id} · ${s.house}</div>
+          <div style="font-size:.72rem;margin-top:6px">Session 2025/2026 · Valid on campus &amp; exeats</div>
+        </div>
+      </div>
+    </div>
+    <p class="fine">QR in production encodes admission number + pickup PIN version. Lost cards are killed in one click.</p>`;
+}
+
+function audit(){
+  return `
+    <div class="notice">NDPR-minded access. Every sensitive open is logged. Parents can request an export of their ward’s file.</div>
+    <div class="card">
+      <h3>Today’s trail</h3>
+      <table>
+        <tr><th>Time</th><th>Actor</th><th>Action</th><th>Record</th></tr>
+        <tr><td>07:02</td><td>Hostel master</td><td>Lights-out roll saved</td><td>All houses</td></tr>
+        <tr><td>09:18</td><td>Bursar</td><td>Viewed defaulter list</td><td>23 accounts</td></tr>
+        <tr><td>11:40</td><td>Nurse</td><td>Opened clinic note</td><td>SSS 2 · N. Ruth</td></tr>
+        <tr><td>13:05</td><td>Principal</td><td>Released mid-term ranks</td><td>SSS 2 Science</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Controls that close a sale</h3>
+      <p>Role firewalls: clinic files not visible to subject teachers. Result hold if fees unpaid. 2-person release for mass WhatsApp. Nightly encrypted backup. Source escrow in the ₦12.4m package.</p>
+    </div>`;
+}
+
+function proposal(){
+  return `
+    <div class="card">
+      <h3>Commercial proposal — VAATIA NEXUS</h3>
+      <p>A custom school operating system built around how Vaatia College Makurdi already works: small roll (≤360), full boarding, entrance CBT in Makurdi and Abuja, published JAMB strength, departments led by named HODs, and a parent portal that already exists in pieces.</p>
+      <p class="price">₦8,500,000 — ₦14,000,000</p>
+      <p class="fine">Recommended package ₦13,100,000 inclusive of year-one operations (ceiling ₦14,000,000 with extra CBT item banks and on-site go-live). This HTML file is the interactive prototype and sales deck — not the finished hosted product.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>What the ₦14m envelope buys</h3>
+        <ul class="modules">
+          <li>Discovery with Principal, VPs, Bursar, Dean, Hostel, Clinic (2 weeks)</li>
+          <li>Data model + NDPR-aware access roles</li>
+          <li>Admissions pipeline matching the current 9-step parent flow</li>
+          <li>Student registry, promotion, alumni</li>
+          <li>CA / exam engine, WAEC-style report cards, JAMB tracker</li>
+          <li>Bursary ledgers, receipts, defaulters, concessions</li>
+          <li>Hostel beds, exeats, lights-out, house points</li>
+          <li>Attendance + sick bay + discipline files</li>
+          <li>Staff records mapped to current HODs</li>
+          <li>Parent and teacher windows (web, phone-first)</li>
+          <li>CBT arena for entrance and JAMB/WAEC mocks</li>
+          <li>Printable report cards, student ID cards, exeat passes</li>
+          <li>Gate pickup PINs and visitor log (CSO desk)</li>
+          <li>Kitchen menu published to parents</li>
+          <li>Library, kit store, term calendar, alumni placement</li>
+          <li>WhatsApp-first blasts with role approval</li>
+          <li>NDPR audit trail and result-hold on unpaid fees</li>
+          <li>Migration from spreadsheets / existing parent portal</li>
+          <li>On-campus training + 12 months support + source escrow</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Suggested commercial split</h3>
+        <table>
+          <tr><th>Item</th><th>₦</th></tr>
+          <tr><td>Product design &amp; Vaatia-specific workflows</td><td>1,800,000</td></tr>
+          <tr><td>Core platform (auth, SIS, academics, fees)</td><td>4,600,000</td></tr>
+          <tr><td>Boarding, clinic, discipline, security desk</td><td>1,900,000</td></tr>
+          <tr><td>Parent / teacher apps, WhatsApp, CBT, print pack</td><td>2,100,000</td></tr>
+          <tr><td>Data migration &amp; integrations</td><td>900,000</td></tr>
+          <tr><td>Training, go-live, 12-month SLA</td><td>1,200,000</td></tr>
+          <tr><td>Contingency / custom reports</td><td>600,000</td></tr>
+          <tr><td><b>Total (recommended package)</b></td><td><b>13,100,000</b></td></tr>
+        </table>
+        <p class="fine" style="margin-top:10px">Comparable off-the-shelf Nigerian SMS tools charge roughly ₦100k–₦500k per term and do not own Vaatia’s entrance, house, or JAMB narrative. A owned system at ~₦35k per student in year one is a Board-level capital item, not a subscription toy.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Honest delivery path</h3>
+      <p>Phase 0 (this file): clickable campus model for the Board. Phase 1: secure backend, real logins, Naira receipts. Phase 2: parent cutover from the current portal. Phase 3: CBT mocks and result publication. Do not present this demo as a live student database.</p>
+    </div>`;
+}
+fillTeachSelect();
+</script>
+</body>
+</html>
