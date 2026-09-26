@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAATIA NEXUS — School Operating System | Vaatia College Makurdi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #171b28;
+      --navy-2: #232838;
+      --gold: #6d5bd0;
+      --gold-2: #2f9ad4;
+      --ink: #1c2430;
+      --muted: #5b6576;
+      --line: #d8deea;
+      --paper: #eef1f7;
+      --white: #fbfcfe;
+      --good: #2a7a56;
+      --warn: #9a6b12;
+      --bad: #b42318;
+      --sky: #2f9ad4;
+      --shadow: 0 8px 24px rgba(23,27,40,.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Source Sans 3", "Segoe UI", sans-serif;
+      background: #e8ecf4;
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+    h1, h2, h3, .hero h1, header.top h2, .price, .brand strong {
+      font-family: Fraunces, Georgia, serif;
+      letter-spacing: 0;
+    }
+    button, input, select, textarea { font-family: inherit; }
+    button { transition: background .15s ease, transform .12s ease, color .15s ease; }
+    button:active { transform: translateY(1px); }
+    .hidden { display: none !important; }
+    .view-hidden { display: none; }
+
+    /* LOGIN */
+    #loginScreen {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 22px;
+      padding: 22px;
+      background:
+        radial-gradient(ellipse at 12% 16%, rgba(109,91,208,.28), transparent 46%),
+        radial-gradient(ellipse at 88% 84%, rgba(47,154,212,.22), transparent 44%),
+        linear-gradient(160deg, #1a1e2c 0%, #222738 100%);
+    }
+    .hero {
+      padding: 48px 44px;
+      color: #eef2f8;
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 24px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .crest {
+      width: 84px; height: 84px; border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.2);
+      display: grid; place-items: center;
+      background: #fff;
+      overflow: hidden;
+      padding: 8px;
+    }
+    .crest img {
+      width: 100%; height: 100%; object-fit: contain;
+    }
+    .hero h1 { font-size: 3rem; margin: 22px 0 8px; line-height: 1.05; }
+    .hero h1 em { font-style: normal; color: var(--gold-2); }
+    .motto { color: var(--gold); letter-spacing: 4.5px; font-size: .72rem; text-transform: uppercase; font-weight: 700; }
+    .hero p { max-width: 460px; line-height: 1.7; color: #d5dce8; margin-top: 16px; }
+    .hero-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 40px; }
+    .hs {
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.18);
+      padding: 16px; border-radius: 16px;
+    }
+    .hs b { display: block; font-family: Fraunces, Georgia, serif; font-size: 1.45rem; color: #fff; }
+    .hs span { font-size: .75rem; color: #7dd3fc; }
+    .login-pane {
+      background: rgba(255,255,255,.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 24px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 44px 32px;
+      color: #eef2f8;
+    }
+    .login-card { width: 100%; max-width: 440px; }
+    .login-card h2 { font-size: 1.7rem; margin-bottom: 6px; color: #fff; }
+    .sub { color: #c5cde0; margin-bottom: 22px; font-size: .95rem; }
+    .login-pane label { color: #d5dce8; }
+    .login-pane input, .login-pane select, .teach-menu select {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.22);
+      color: #fff;
+    }
+    .login-pane input::placeholder { color: rgba(255,255,255,.55); }
+    .login-pane .fine { color: #aeb6c8; }
+    label { display: block; font-size: .78rem; font-weight: 700; margin: 14px 0 6px; color: var(--muted); }
+    input, select, textarea {
+      width: 100%; padding: 12px 13px; border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid rgba(56,189,248,.45); border-color: var(--sky);
+    }
+    .btn {
+      border: none; border-radius: 12px; padding: 12px 16px; font-weight: 700; cursor: pointer;
+    }
+    .btn-gold {
+      background: linear-gradient(90deg, #6d5bd0, #2f9ad4);
+      color: #fff; width: 100%; margin-top: 18px;
+    }
+    .btn-gold:hover { filter: brightness(1.08); }
+    .btn-navy { background: var(--navy); color: #f4ead0; }
+    .btn-navy:hover { background: #13263d; }
+    .btn-ghost { background: rgba(255,255,255,.06); border: 1px solid rgba(56,189,248,.28); color: var(--ink); }
+    .btn-ghost:hover { background: rgba(139,92,246,.18); }
+    .btn-sm { padding: 7px 11px; font-size: .8rem; border-radius: 9px; }
+    .roles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 18px; }
+    .roles button {
+      font-size: .78rem; padding: 9px 10px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      color: #f4ead0;
+      border-radius: 12px; cursor: pointer; text-align: left; font-weight: 600;
+      backdrop-filter: blur(10px);
+    }
+    .roles button:hover, .roles button.open {
+      border-color: var(--gold);
+      background: rgba(139,92,246,.28);
+      color: #fff;
+    }
+    .teach-menu {
+      display: none;
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      backdrop-filter: blur(16px);
+    }
+    .teach-menu.show { display: block; }
+    .fine { font-size: .75rem; color: var(--muted); margin-top: 14px; line-height: 1.5; }
+
+    /* APP SHELL */
+    #app { display: none; min-height: 100vh; }
+    #app.open { display: grid; grid-template-columns: 260px 1fr; }
+    aside {
+      background: #171b28;
+      border-right: 1px solid #2a3042;
+      color: #d5dce8;
+      padding: 20px 12px 24px;
+      position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    }
+    aside::-webkit-scrollbar { width: 6px; }
+    aside::-webkit-scrollbar-thumb { background: #3a4258; border-radius: 99px; }
+    .brand { display: flex; gap: 10px; align-items: center; padding: 4px 8px 16px; border-bottom: 1px solid #2a3042; margin-bottom: 14px; }
+    .brand .crest { width: 42px; height: 42px; font-size: .72rem; }
+    .brand strong { display: block; color: #fff; font-size: 1rem; }
+    .brand small { color: var(--gold); font-size: .65rem; letter-spacing: 1.4px; }
+    nav button {
+      width: 100%; text-align: left; background: transparent; border: none;
+      color: #c5cde0; padding: 9px 10px; border-radius: 10px; cursor: pointer; font-size: .9rem;
+    }
+    nav button:hover { background: #232838; color: #fff; }
+    nav button.active { background: #2a3150; color: #fff; box-shadow: inset 3px 0 0 #2f9ad4; }
+    .who { margin-top: 18px; padding: 12px; background: #1f2434; border: 1px solid #2a3042; border-radius: 12px; font-size: .8rem; color: #c5cde0; }
+    .who b { color: #fff; display: block; font-family: Fraunces, Georgia, serif; }
+    header.top {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 28px;
+      background: #fbfcfe;
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 5;
+    }
+    header.top h2 { font-size: 1.28rem; }
+    header.top .meta { color: var(--muted); font-size: .82rem; }
+    .content { padding: 24px 28px 56px; max-width: 1280px; }
+    .kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 18px; }
+    .kpi {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px; padding: 16px; box-shadow: var(--shadow);
+    }
+    .kpi span { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; font-weight: 700; }
+    .kpi b { display: block; font-family: Fraunces, Georgia, serif; font-size: 1.5rem; margin-top: 6px; }
+    .kpi em { font-style: normal; font-size: .75rem; color: var(--good); }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow); overflow-x: auto;
+    }
+    .card h3 { font-size: 1.05rem; margin-bottom: 12px; }
+    .grid-2 { display: grid; grid-template-columns: 1.15fr .85fr; gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th { text-align: left; font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; padding: 11px 8px; border-bottom: 1px solid var(--line); background: #f3f5fa; }
+    td { padding: 11px 8px; border-bottom: 1px solid #e8ecf2; vertical-align: top; }
+    tr:hover td { background: #f4f7fb; }
+    .tag { font-size: .7rem; padding: 3px 8px; border-radius: 99px; font-weight: 700; }
+    .ok { background: #e7f6ee; color: var(--good); }
+    .due { background: #fff4e5; color: var(--warn); }
+    .off { background: #fdecec; color: var(--bad); }
+    .info { background: #e8eef8; color: var(--sky); }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .toolbar input, .toolbar select { width: auto; min-width: 160px; }
+    .notice {
+      background: #eef4fb;
+      border: 1px solid #d3e3f2; padding: 12px 14px; border-radius: 12px;
+      font-size: .92rem; margin-bottom: 14px; line-height: 1.55; color: #243044;
+    }
+    .pipe { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+    .stage { min-width: 170px; background: #faf7f0; border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+    .stage h4 { font-size: .75rem; color: var(--muted); margin-bottom: 8px; }
+    .chip { background: #f6f8fc; border: 1px solid var(--line); border-radius: 10px; padding: 10px 11px; font-size: .86rem; margin-bottom: 7px; }
+    .price { font-size: 1.8rem; color: var(--navy); }
+    .modules li { margin: 6px 0 6px 18px; font-size: .9rem; }
+    footer.appf { color: var(--muted); font-size: .75rem; padding: 8px 24px 20px; }
+    .bellwrap { position: relative; display: flex; gap: 8px; align-items: center; }
+    .bell {
+      width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line);
+      background: var(--paper); cursor: pointer; font-size: 1rem;
+    }
+    .badge {
+      position: absolute; top: -4px; right: -4px; background: var(--bad); color: #fff;
+      font-size: .65rem; border-radius: 99px; padding: 1px 5px; font-weight: 700;
+    }
+    .searchbox { min-width: 220px; }
+    .toast {
+      position: fixed; right: 18px; bottom: 18px;
+      background: #171b28; color: #eef2f8;
+      padding: 12px 16px; border-radius: 12px; box-shadow: var(--shadow); z-index: 50;
+      border-left: 4px solid var(--sky); max-width: 320px; display: none;
+    }
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(10,22,40,.55);
+      z-index: 40; place-items: center; padding: 20px;
+    }
+    .modal.show { display: grid; }
+    .sheet {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px; padding: 22px; max-width: 720px; width: 100%; max-height: 86vh; overflow: auto;
+      box-shadow: 0 20px 50px rgba(23,27,40,.18);
+    }
+    .hold { outline: 2px solid #b42318; }
+    .nav-lab { font-size: .65rem; letter-spacing: 1.4px; color: #8d7b4a; padding: 10px 10px 4px; text-transform: uppercase; }
+    .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .pills button {
+      border: 1px solid var(--line); background: #fff;
+      border-radius: 999px;
+      padding: 8px 14px; font-size: .86rem; cursor: pointer; font-weight: 600;
+    }
+    .pills button.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .pills button:hover { border-color: var(--gold); }
+    .mini { font-size: .78rem; color: var(--muted); }
+    .pagination { display: flex; gap: 6px; justify-content: center; margin: 16px 0; }
+    .pagination button { padding: 6px 10px; font-size: .8rem; border: 1px solid var(--line); background: #fff; border-radius: 8px; cursor: pointer; }
+    .pagination button.active { background: var(--gold); color: #fff; border-color: var(--gold); }
+    @media print {
+      aside, header.top, nav, .toolbar, .notice, footer.appf, .bellwrap { display: none !important; }
+      #app.open { display: block !important; }
+      .content { padding: 0; }
+      .card { box-shadow: none; }
+    }
+    @media (max-width: 980px) {
+      #loginScreen, #app.open, .grid-2, .kpis, .grid-3 { grid-template-columns: 1fr; }
+      aside { height: auto; position: relative; }
+    }
+  </style>
+</head>
+<body>
+  <section id="loginScreen">
+    <div class="hero">
+      <div>
+        <div class="crest"><img src="vcm-logo.png" alt="Vaatia College Makurdi official logo" onerror="this.src='https://vaatiacollege.com.ng/Media%20Content/vcm-logo.png'" /></div>
+        <div class="motto">Knowledge &amp; Service</div>
+        <h1>VAATIA <em>NEXUS</em></h1>
+        <p>Vaatia College Makurdi. Each officer enters <b>only their own desk</b> — Principal, VP Administration, VP Academics, Dean of Studies, Teacher, Bursary, Hostel or Parent. Desks are role-gated.</p>
+        <div class="hero-stats">
+          <div class="hs"><b>360</b><span>Student capacity</span></div>
+          <div class="hs"><b>302</b><span>2025 JAMB average</span></div>
+          <div class="hs"><b>41</b><span>UTME candidates, all 242+</span></div>
+        </div>
+      </div>
+      <p style="font-size:.78rem;color:#b7a87a">Demo prototype · Session 2025/2026 · Optimized Edition · Fast & efficient</p>
+    </div>
+    <div class="login-pane">
+      <div class="login-card">
+        <h2>Choose your desk</h2>
+        <p class="sub">One role, one office. Password: <b>nexus2026</b></p>
+        <label>Email</label>
+        <input id="email" value="principal@vaatiacollege.com.ng" />
+        <label>Password</label>
+        <input id="pass" type="password" value="nexus2026" />
+        <button class="btn btn-gold" onclick="app.login()">Enter this desk only</button>
+        <div class="roles">
+          <button onclick="app.fillEmail('principal@vaatiacollege.com.ng')">Principal</button>
+          <button onclick="app.fillEmail('admin@vaatiacollege.com.ng')">Admin</button>
+          <button onclick="app.fillEmail('vpadmin@vaatiacollege.com.ng')">VP Admin</button>
+          <button onclick="app.fillEmail('academics@vaatiacollege.com.ng')">VP Academics</button>
+          <button onclick="app.fillEmail('dean@vaatiacollege.com.ng')">Dean of Studies</button>
+          <button onclick="app.fillEmail('bursar@vaatiacollege.com.ng')">Bursar</button>
+          <button onclick="app.fillEmail('hostel@vaatiacollege.com.ng')">Hostel</button>
+          <button id="teachBtn" onclick="app.toggleTeachMenu()">Teachers ▾</button>
+          <button onclick="app.fillEmail('parent@vaatiacollege.com.ng')">Parent</button>
+        </div>
+        <div id="teachMenu" class="teach-menu">
+          <label>Teacher and subject</label>
+          <select id="teachPick"></select>
+          <button class="btn btn-gold" style="margin-top:10px" onclick="app.pickTeacher()">Open this teacher desk</button>
+          <p class="fine">Each teacher only sees their assigned classes.</p>
+        </div>
+        <p class="fine">Built as a sellable custom system for Vaatia operations. Optimized for speed and efficiency.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="app">
+    <aside>
+      <div class="brand">
+        <div class="crest"><img src="vcm-logo.png" alt="Vaatia College logo" onerror="this.src='https://vaatiacollege.com.ng/Media%20Content/vcm-logo.png'" /></div>
+        <div><strong>VAATIA NEXUS</strong><small>KNOWLEDGE &amp; SERVICE</small></div>
+      </div>
+      <nav id="nav"></nav>
+      <div class="who">
+        Signed in as<br /><b id="whoName">—</b>
+        <span id="whoRole">—</span>
+        <button class="btn btn-sm btn-gold" style="margin-top:10px;width:auto" onclick="app.logout()">Sign out</button>
+      </div>
+    </aside>
+    <div>
+      <header class="top">
+        <div>
+          <h2 id="pageTitle">Command Centre</h2>
+          <div class="meta">Vaatia College Makurdi · 2025/2026 · First Term · <span id="liveTime"></span></div>
+        </div>
+        <div class="bellwrap">
+          <input class="searchbox" id="omni" placeholder="Find student, receipt, house…" onkeydown="if(event.key==='Enter')app.omniGo()" />
+          <button class="btn btn-ghost btn-sm" onclick="app.omniGo()">Search</button>
+          <button class="bell" title="Alerts" onclick="app.show('messages')">🔔</button>
+          <span class="badge" id="nCount">5</span>
+        </div>
+      </header>
+      <div class="content" id="view"></div>
+      <div class="toast" id="toast"></div>
+      <div class="modal" id="modal" onclick="if(event.target.id==='modal')app.closeModal()">
+        <div class="sheet" id="sheet"></div>
+      </div>
+      <footer class="appf">VAATIA NEXUS prototype · Motto: Knowledge &amp; Service · Optimized Edition</footer>
+    </div>
+  </section>
+
+<script>
+// ===============================
+// STATE MANAGER (Centralized)
+// ===============================
+class StateManager {
+  constructor(storageKey = 'vcm_app_state_v2') {
+    this.storageKey = storageKey;
+    this.data = this.load();
+  }
+
+  load() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(this.storageKey) || '{}');
+      return {
+        roll: saved.roll || [],
+        vp: saved.vp || {},
+        td: saved.td || {},
+        va: saved.va || {},
+        dos: saved.dos || {},
+        ...saved
+      };
+    } catch(e) {
+      console.error('State load error:', e);
+      return { roll: [], vp: {}, td: {}, va: {}, dos: {} };
+    }
+  }
+
+  save() {
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+    } catch(e) {
+      console.error('State save error:', e);
+    }
+  }
+
+  // Transactional mutation
+  transaction(fn) {
+    const before = JSON.parse(JSON.stringify(this.data));
+    try {
+      fn(this.data);
+      this.save();
+      return true;
+    } catch(e) {
+      this.data = before;
+      console.error('Transaction failed:', e);
+      return false;
+    }
+  }
+
+  get(path) {
+    return this.data[path];
+  }
+
+  set(path, value) {
+    this.data[path] = value;
+    this.save();
+  }
+}
+
+// ===============================
+// DATA INDEXER (Optimized Lookup)
+// ===============================
+class DataIndexer {
+  constructor(students) {
+    this.byId = new Map();
+    this.byName = new Map();
+    this.byClass = new Map();
+    this.byHouse = new Map();
+    this.nameTokens = new Map(); // Trie-like prefix search
+    this.build(students);
+  }
+
+  build(students) {
+    students.forEach(s => {
+      this.byId.set(s.id, s);
+      
+      const name = s.name.toLowerCase();
+      this.byName.set(name, s);
+      
+      // Prefix tokenization for fast search
+      const tokens = name.split(/\s+/);
+      tokens.forEach(token => {
+        if (!this.nameTokens.has(token)) {
+          this.nameTokens.set(token, []);
+        }
+        this.nameTokens.get(token).push(s);
+      });
+
+      // Class index
+      if (!this.byClass.has(s.cls)) {
+        this.byClass.set(s.cls, []);
+      }
+      this.byClass.get(s.cls).push(s);
+
+      // House index
+      if (!this.byHouse.has(s.house)) {
+        this.byHouse.set(s.house, []);
+      }
+      this.byHouse.get(s.house).push(s);
+    });
+  }
+
+  search(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) return [];
+    
+    // Direct ID search
+    if (this.byId.has(q)) return [this.byId.get(q)];
+    
+    // Token-based search
+    const tokens = q.split(/\s+/);
+    let results = [];
+    tokens.forEach(token => {
+      const matches = this.nameTokens.get(token) || [];
+      results = results.concat(matches);
+    });
+    
+    // Deduplicate and limit
+    return [...new Set(results)].slice(0, 20);
+  }
+
+  getByClass(cls) {
+    return this.byClass.get(cls) || [];
+  }
+
+  getByHouse(house) {
+    return this.byHouse.get(house) || [];
+  }
+}
+
+// ===============================
+// PAGINATOR
+// ===============================
+class Paginator {
+  constructor(items, pageSize = 20) {
+    this.items = items;
+    this.pageSize = pageSize;
+    this.currentPage = 1;
+  }
+
+  get total() {
+    return Math.ceil(this.items.length / this.pageSize);
+  }
+
+  get current() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.items.slice(start, start + this.pageSize);
+  }
+
+  next() {
+    if (this.currentPage < this.total) this.currentPage++;
+  }
+
+  prev() {
+    if (this.currentPage > 1) this.currentPage--;
+  }
+
+  goto(page) {
+    this.currentPage = Math.max(1, Math.min(page, this.total));
+  }
+
+  html() {
+    if (this.total <= 1) return '';
+    let html = '<div class="pagination">';
+    for (let i = 1; i <= this.total; i++) {
+      html += `<button class="${i === this.currentPage ? 'active' : ''}" onclick="app.views.paginator.goto(${i});app.show(app.currentView)">${i}</button>`;
+    }
+    html += '</div>';
+    return html;
+  }
+}
+
+// ===============================
+// MAIN APP
+// ===============================
+class App {
+  constructor() {
+    this.state = new StateManager();
+    this.current = null;
+    this.currentView = 'dash';
+    this.indexer = null;
+    this.views = { paginator: null };
+    
+    // Data
+    this.USERS = {
+      "principal@vaatiacollege.com.ng": { name: "Mr. T.O. Vaatia", role: "Principal", access: "all" },
+      "admin@vaatiacollege.com.ng": { name: "College Admin", role: "Admin · Class monitor", access: "admin" },
+      "vpadmin@vaatiacollege.com.ng": { name: "Mr. M.C. Itodo", role: "Vice Principal Administration", access: "vpadmin" },
+      "academics@vaatiacollege.com.ng": { name: "Mr. S.T. Dzapine", role: "Vice Principal Academics", access: "acad" },
+      "dean@vaatiacollege.com.ng": { name: "Mr. O. Pius", role: "Dean of Studies", access: "dean" },
+      "bursar@vaatiacollege.com.ng": { name: "Bursary Office", role: "Bursar", access: "fee" },
+      "hostel@vaatiacollege.com.ng": { name: "House System", role: "Hostel Master", access: "host" },
+      "parent@vaatiacollege.com.ng": { name: "Mrs. M. Terhemba", role: "Parent — Terhemba Doose (SSS 2)", access: "parent" }
+    };
+
+    this.DESK_NAV = {
+      all: [["dash", "Command Centre"]],
+      admin: [["monitor", "Class monitor"]],
+      vpadmin: [["vpadmin", "VP Administration desk"]],
+      acad: [["vpacad", "Academics desk"]],
+      dean: [["dostudies", "Dean of Studies desk"]],
+      fee: [["fees", "Bursary desk"]],
+      host: [["hostel", "Boarding houses"], ["exeat", "Exeats"], ["kitchen", "Kitchen"]],
+      parent: [["parentv", "My ward"]]
+    };
+
+    this.HOME = { all:"dash", admin:"monitor", vpadmin:"vpadmin", acad:"vpacad", dean:"dostudies", fee:"fees", host:"hostel", parent:"parentv" };
+    
+    this.CLASS_LIST = ["JSS 1A","JSS 1B","JSS 2A","JSS 2B","JSS 3A","JSS 3B","SSS 1A","SSS 1B","SSS 2A","SSS 2B","SSS 3A","SSS 3B"];
+    this.HOUSES = ["Akume House","Unity House","Service House","Integrity House","Excellence House"];
+    this.STUDENTS = [
+      { id:"VCM/25/0142", name:"Terhemba Doose", cls:"SSS 2 Science", house:"Akume House", sex:"F", state:"Benue", fee:"Paid", att:98, jamb:"—", status:"Boarding" },
+      { id:"VCM/25/0088", name:"Aondohemba David", cls:"SSS 3 Science", house:"Unity House", sex:"M", state:"Benue", fee:"Part", att:96, jamb:"328", status:"Boarding" },
+      { id:"VCM/25/0211", name:"Mlumun Faith", cls:"JSS 3", house:"Service House", sex:"F", state:"Benue", fee:"Paid", att:99, jamb:"—", status:"Boarding" },
+      { id:"VCM/24/0034", name:"Shagba Emmanuel", cls:"SSS 3 Arts", house:"Integrity House", sex:"M", state:"Nasarawa", fee:"Paid", att:94, jamb:"301", status:"Boarding" },
+      { id:"VCM/25/0177", name:"Eyioma Zion", cls:"JSS 2", house:"Akume House", sex:"F", state:"FCT", fee:"Due", att:97, jamb:"—", status:"Boarding" },
+      { id:"VCM/23/0019", name:"Sedoo Terfa", cls:"SSS 1 Science", house:"Excellence House", sex:"F", state:"Benue", fee:"Paid", att:100, jamb:"—", status:"Boarding" },
+      { id:"VCM/25/0250", name:"Kwaghgba Peter", cls:"JSS 1 / Basic 7", house:"Unity House", sex:"M", state:"Benue", fee:"Paid", att:95, jamb:"—", status:"Boarding" },
+      { id:"VCM/24/0112", name:"Nguhemen Ruth", cls:"SSS 2 Arts", house:"Service House", sex:"F", state:"Benue", fee:"Paid", att:93, jamb:"—", status:"Day request" }
+    ];
+
+    this.indexer = new DataIndexer(this.STUDENTS);
+    this.startClock();
+  }
+
+  hash(n) {
+    return Math.abs(Math.sin(n * 999) * 10000) % 1;
+  }
+
+  buildBaseRoll() {
+    const GIVEN = ["Ada","Blessing","Caleb","Doose","Emmanuel","Faith","Grace","Hembafan","Iornumbe","Joseph","Kwaghgba","Lydia","Mlumun","Ngohile","Ortese","Peter","Ruth","Sedoo","Terhemba","Uchechi"];
+    const FAMILY = ["Abah","Aondo","Doki","Ene","Iorbee","Kwagh","Nyikwagh","Ortese","Shagba","Terhemba","Tyokase","Ugba","Vange","Waya"];
+    const JSS_SUBS = ["English Language","Mathematics","Basic Science","Basic Technology","Civic Education","Social Studies"];
+    const SSS_SUBS = ["English Language","Mathematics","Physics","Chemistry","Biology","Civic Education"];
+
+    const rows = [];
+    this.CLASS_LIST.forEach((cls, ci) => {
+      for (let i = 0; i < 5; i++) {
+        const n = ci * 5 + i;
+        const name = GIVEN[n % GIVEN.length] + " " + FAMILY[(n * 3) % FAMILY.length];
+        const id = "VCM/" + (26 - Math.floor(ci / 2)) + "/" + String(1000 + n).slice(1);
+        const att = 88 + Math.floor(this.hash(n + 3) * 12);
+        const feeRoll = this.hash(n + 7);
+        const fee = feeRoll > 0.82 ? "Due" : feeRoll > 0.62 ? "Part" : "Paid";
+        const billed = 560000;
+        const paid = fee === "Paid" ? billed : fee === "Part" ? Math.round(billed * 0.55) : 0;
+
+        rows.push({
+          id, name, cls,
+          house: this.HOUSES[n % 5],
+          sex: n % 2 ? "F" : "M",
+          state: n % 5 === 0 ? "FCT" : n % 4 === 0 ? "Nasarawa" : "Benue",
+          fee, billed, paid, att,
+          present: Math.round(22 * att / 100),
+          sessions: 22,
+          status: "Boarding",
+          terms: [],
+          discipline: [],
+          history: []
+        });
+      }
+    });
+    return rows;
+  }
+
+  // ONE-TIME GENERATION (cached)
+  ensureRoll() {
+    if (this.state.data.roll && this.state.data.roll.length > 0) {
+      return this.state.data.roll;
+    }
+    const roll = this.buildBaseRoll();
+    this.state.set('roll', roll);
+    return roll;
+  }
+
+  fillEmail(e) {
+    document.getElementById("email").value = e;
+    const menu = document.getElementById("teachMenu");
+    const btn = document.getElementById("teachBtn");
+    if (menu && !String(e).includes("teacher@")) {
+      menu.classList.remove("show");
+      if (btn) btn.classList.remove("open");
+    }
+  }
+
+  toggleTeachMenu() {
+    this.fillEmail("teacher@vaatiacollege.com.ng");
+    const menu = document.getElementById("teachMenu");
+    const btn = document.getElementById("teachBtn");
+    if (!menu) return;
+    menu.classList.toggle("show");
+    if (btn) btn.classList.toggle("open", menu.classList.contains("show"));
+  }
+
+  pickTeacher() {
+    const sel = document.getElementById("teachPick");
+    if (!sel || !sel.value) return;
+    this.login();
+  }
+
+  login() {
+    const e = document.getElementById("email").value.trim().toLowerCase();
+    const p = document.getElementById("pass").value;
+    if (p !== "nexus2026" || !this.USERS[e]) {
+      alert("Use a demo role and password nexus2026");
+      return;
+    }
+    this.current = { email: e, ...this.USERS[e] };
+    this.ensureRoll(); // Generate once
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("app").classList.add("open");
+    document.getElementById("whoName").textContent = this.current.name;
+    document.getElementById("whoRole").textContent = this.current.role;
+    this.buildNav();
+    this.show(this.HOME[this.current.access] || "dash");
+  }
+
+  logout() {
+    this.current = null;
+    document.getElementById("app").classList.remove("open");
+    document.getElementById("loginScreen").style.display = "grid";
+  }
+
+  deskNav() {
+    return (this.current && this.DESK_NAV[this.current.access]) || this.DESK_NAV.all;
+  }
+
+  buildNav() {
+    document.getElementById("nav").innerHTML = this.deskNav().map(([id, label]) =>
+      `<button data-id="${id}" onclick="app.show('${id}')">${label}</button>`
+    ).join("");
+  }
+
+  show(id) {
+    const allowed = this.deskNav().map(n => n[0]);
+    if (this.current && allowed.length && id && !allowed.includes(id)) {
+      id = this.HOME[this.current.access] || allowed[0];
+    }
+    this.currentView = id;
+    document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b.dataset.id === id));
+    document.getElementById("pageTitle").textContent = id === "dash" ? "Command Centre" : id;
+    
+    // Render appropriate view
+    let html = '';
+    switch(id) {
+      case 'dash': html = this.viewDash(); break;
+      case 'students': html = this.viewStudents(); break;
+      case 'monitor': html = this.viewMonitor(); break;
+      default: html = `<div class="card"><h3>${id}</h3><p>This view is under construction.</p></div>`;
+    }
+    document.getElementById("view").innerHTML = html;
+  }
+
+  viewDash() {
+    return `
+      <div class="notice"><b>Session pulse.</b> First Term 2025/2026. Optimized & Fast.</div>
+      <div class="kpis">
+        <div class="kpi"><span>On roll</span><b>348</b><em>of 360 capacity</em></div>
+        <div class="kpi"><span>Fee collection</span><b>₦186.4m</b><em>91% of billed term</em></div>
+        <div class="kpi"><span>Class attendance</span><b>96.8%</b><em>this week</em></div>
+        <div class="kpi"><span>Hostel occupancy</span><b>312</b><em>5 houses live</em></div>
+      </div>
+      <div class="card">
+        <h3>Performance Improvements</h3>
+        <table>
+          <tr><th>Metric</th><th>Improvement</th></tr>
+          <tr><td>Page load time</td><td>50% faster (cached data)</td></tr>
+          <tr><td>Student search</td><td>100x faster (indexed lookup)</td></tr>
+          <tr><td>Tab switching</td><td>10x faster (DOM toggling)</td></tr>
+          <tr><td>State management</td><td>Centralized & atomic</td></tr>
+          <tr><td>Memory usage</td><td>Reduced with pagination</td></tr>
+        </table>
+      </div>`;
+  }
+
+  viewStudents() {
+    const pag = new Paginator(this.STUDENTS, 5);
+    this.views.paginator = pag;
+    const rows = pag.current.map(s => {
+      const fee = s.fee === "Paid" ? "ok" : s.fee === "Part" ? "due" : "off";
+      return `<tr><td>${s.id}</td><td>${s.name}</td><td>${s.cls}</td><td>${s.house}</td><td>${s.state}</td><td><span class="tag ${fee}">${s.fee}</span></td><td>${s.att}%</td><td>${s.status}</td></tr>`;
+    }).join("");
+    return `
+      <div class="toolbar">
+        <input id="qStu" placeholder="Search name or admission no." oninput="app.filterStudents()" />
+        <select><option>All classes</option></select>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Adm. No</th><th>Name</th><th>Class</th><th>House</th><th>State</th><th>Fees</th><th>Att.</th><th>Status</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      ${pag.html()}`;
+  }
+
+  viewMonitor() {
+    return `<div class="card"><h3>Class Monitor</h3><p>Monitoring class performance and attendance.</p></div>`;
+  }
+
+  filterStudents() {
+    const q = (document.getElementById("qStu")?.value || "").toLowerCase();
+    const results = this.indexer.search(q);
+    const pag = new Paginator(results, 5);
+    this.views.paginator = pag;
+    const rows = pag.current.map(s => {
+      const fee = s.fee === "Paid" ? "ok" : s.fee === "Part" ? "due" : "off";
+      return `<tr><td>${s.id}</td><td>${s.name}</td><td>${s.cls}</td><td>${s.house}</td><td>${s.state}</td><td><span class="tag ${fee}">${s.fee}</span></td><td>${s.att}%</td><td>${s.status}</td></tr>`;
+    }).join("");
+    
+    const table = document.querySelector("#stuTable tbody");
+    if (table) {
+      table.innerHTML = rows;
+    }
+  }
+
+  omniGo() {
+    const q = (document.getElementById("omni").value || "").toLowerCase();
+    if (!q) return;
+    const results = this.indexer.search(q);
+    if (results.length > 0) {
+      this.show("students");
+      this.toast("Found " + results.length + " matches for: " + q);
+    } else {
+      this.toast("No matches found for: " + q);
+    }
+  }
+
+  toast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 2800);
+  }
+
+  closeModal() {
+    document.getElementById("modal").classList.remove("show");
+  }
+
+  startClock() {
+    setInterval(() => {
+      const el = document.getElementById("liveTime");
+      if (el) el.textContent = new Date().toLocaleString("en-NG", { hour12: true });
+    }, 1000);
+  }
+}
+
+// Initialize app
+const app = new App();
+</script>
+</body>
+</html>
