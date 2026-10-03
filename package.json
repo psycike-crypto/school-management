@@ -1,0 +1,15 @@
+{
+  "name": "school-management",
+  "version": "1.0.0",
+  "description": "School management backend with SQLite database and static front-end",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0",
+    "cors": "^2.9.1",
+    "express": "^4.19.2"
+  }
+}
