@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAATIA NEXUS — School Operating System | Vaatia College Makurdi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <section id="loginScreen">
+    <div class="hero">
+      <div>
+        <div class="crest"><img src="vcm-logo.png" alt="Vaatia College Makurdi official logo" onerror="this.src='https://vaatiacollege.com.ng/Media%20Content/vcm-logo.png'" /></div>
+        <div class="motto">Knowledge &amp; Service</div>
+        <h1>VAATIA <em>NEXUS</em></h1>
+        <p>Vaatia College Makurdi. Each officer enters <b>only their own desk</b> — Principal, VP Administration, VP Academics, Dean of Studies, Teacher, Bursary, Hostel or Parent. Desks are not shared.</p>
+        <div class="hero-stats">
+          <div class="hs"><b>360</b><span>Student capacity</span></div>
+          <div class="hs"><b>302</b><span>2025 JAMB average</span></div>
+          <div class="hs"><b>41</b><span>UTME candidates, all 242+</span></div>
+        </div>
+      </div>
+      <p style="font-size:.78rem;color:#b7a87a">Demo prototype · Session 2025/2026 · Not the official live portal</p>
+    </div>
+    <div class="login-pane">
+      <div class="login-card">
+        <h2>Choose your desk</h2>
+        <p class="sub">One role, one office. Password: <b>nexus2026</b></p>
+        <label>Email</label>
+        <input id="email" value="principal@vaatiacollege.com.ng" />
+        <label>Password</label>
+        <input id="pass" type="password" value="nexus2026" />
+        <button class="btn btn-gold" onclick="login()">Enter this desk only</button>
+        <div class="roles">
+          <button onclick="fill('principal@vaatiacollege.com.ng','Principal')">Principal</button>
+          <button onclick="fill('admin@vaatiacollege.com.ng','Admin')">Admin</button>
+          <button onclick="fill('vpadmin@vaatiacollege.com.ng','VP Admin')">VP Admin</button>
+          <button onclick="fill('academics@vaatiacollege.com.ng','VP Academics')">VP Academics</button>
+          <button onclick="fill('dean@vaatiacollege.com.ng','Dean of Studies')">Dean of Studies</button>
+          <button onclick="fill('bursar@vaatiacollege.com.ng','Bursar')">Bursar</button>
+          <button onclick="fill('hostel@vaatiacollege.com.ng','Hostel Master')">Hostel</button>
+          <button id="teachBtn" onclick="toggleTeachMenu()">Teachers ▾</button>
+          <button onclick="fill('parent@vaatiacollege.com.ng','Parent / Guardian')">Parent</button>
+        </div>
+        <div id="teachMenu" class="teach-menu">
+          <label>Teacher and subject</label>
+          <select id="teachPick"></select>
+          <button class="btn btn-gold" style="margin-top:10px" onclick="pickTeacher()">Open this teacher desk</button>
+          <p class="fine" style="margin-top:8px">Each teacher only sees the classes attached to the subject they pick.</p>
+        </div>
+        <p class="fine">Built as a sellable custom system for Vaatia operations: Basic 7–SSS 3, boarding houses, entrance CBT, acceptance &amp; commitment fees, WAEC / NECO / JAMB, sick-bay log and more.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="app">
+    <aside>
+      <div class="brand">
+        <div class="crest"><img src="vcm-logo.png" alt="Vaatia College logo" onerror="this.src='https://vaatiacollege.com.ng/Media%20Content/vcm-logo.png'" /></div>
+        <div><strong>VAATIA NEXUS</strong><small>KNOWLEDGE &amp; SERVICE</small></div>
+      </div>
+      <nav id="nav"></nav>
+      <div class="who">
+        Signed in as<br /><b id="whoName">—</b>
+        <span id="whoRole">—</span>
+        <button class="btn btn-sm btn-gold" style="margin-top:10px;width:auto" onclick="logout()">Sign out</button>
+      </div>
+    </aside>
+    <div>
+      <header class="top">
+        <div>
+          <h2 id="pageTitle">Command Centre</h2>
+          <div class="meta">Vaatia College Makurdi · 2025/2026 · First Term · <span id="liveTime"></span></div>
+        </div>
+        <div class="bellwrap">
+          <input class="searchbox" id="omni" placeholder="Find student, receipt, house…" onkeydown="if(event.key==='Enter')omniGo()" />
+          <button class="btn btn-ghost btn-sm" onclick="omniGo()">Search</button>
+          <button class="bell" title="Alerts" onclick="show('messages')">🔔</button>
+          <span class="badge" id="nCount">5</span>
+        </div>
+      </header>
+      <div class="content" id="view"></div>
+      <div class="toast" id="toast"></div>
+      <div class="modal" id="modal" onclick="if(event.target.id==='modal')closeModal()">
+        <div class="sheet" id="sheet"></div>
+      </div>
+      <footer class="appf">VAATIA NEXUS prototype · Motto: Knowledge &amp; Service · Address: No. 8 Chia Ikima Street, Off Sen. George Akume Way, Makurdi, Benue · P.O. Box 1354</footer>
+    </div>
+  </section>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
