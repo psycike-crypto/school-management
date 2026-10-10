@@ -59,21 +59,44 @@ function pickTeacher() {
   login();
 }
 
-function login() {
+async function login() {
   const email = (document.getElementById('email')?.value || '').trim().toLowerCase();
   const pass = document.getElementById('pass')?.value || '';
-  if (pass !== 'nexus2026' || !USERS[email]) {
-    alert('Use a demo role and password nexus2026');
+
+  if (!email || !pass) {
+    alert('Email and password are required.');
     return;
   }
 
-  current = { email, ...USERS[email] };
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('app').classList.add('open');
-  document.getElementById('whoName').textContent = current.name;
-  document.getElementById('whoRole').textContent = current.role;
-  buildNav();
-  show(HOME[current.access] || 'dashboard');
+  try {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Invalid email or password.');
+    }
+
+    current = {
+      email: data.user.email,
+      name: data.user.name,
+      role: data.user.role,
+      access: data.user.access
+    };
+
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('open');
+    document.getElementById('whoName').textContent = current.name;
+    document.getElementById('whoRole').textContent = current.role;
+    buildNav();
+    show(HOME[current.access] || 'dashboard');
+  } catch (error) {
+    console.error(error);
+    alert(error.message || 'Login failed.');
+  }
 }
 
 function logout() {
