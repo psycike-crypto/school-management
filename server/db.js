@@ -96,20 +96,24 @@ function initialise() {
 
   const userCount = db.prepare('SELECT COUNT(*) AS c FROM users').get();
   if (!userCount.c) {
-    db.prepare(`
-      INSERT INTO users (email, password, role, display_name)
-      VALUES (?, ?, ?, ?)
-    `).run('principal@vaatiacollege.com.ng', 'nexus2026', 'admin', 'Mr. T.O. Vaatia');
+    const users = [
+      ['principal@vaatiacollege.com.ng', 'nexus2026', 'principal', 'Mr. T.O. Vaatia'],
+      ['admin@vaatiacollege.com.ng', 'nexus2026', 'admin', 'College Admin'],
+      ['vpadmin@vaatiacollege.com.ng', 'nexus2026', 'vpadmin', 'Mr. M.C. Itodo'],
+      ['academics@vaatiacollege.com.ng', 'nexus2026', 'academics', 'Mr. S.T. Dzapine'],
+      ['dean@vaatiacollege.com.ng', 'nexus2026', 'dean', 'Mr. O. Pius'],
+      ['bursar@vaatiacollege.com.ng', 'nexus2026', 'bursar', 'Bursary Office'],
+      ['hostel@vaatiacollege.com.ng', 'nexus2026', 'hostel', 'House System'],
+      ['teacher@vaatiacollege.com.ng', 'nexus2026', 'teacher', 'Mr. T.T. Tyohuna'],
+      ['parent@vaatiacollege.com.ng', 'nexus2026', 'parent', 'Mrs. M. Terhemba']
+    ];
 
-    db.prepare(`
+    const insert = db.prepare(`
       INSERT INTO users (email, password, role, display_name)
       VALUES (?, ?, ?, ?)
-    `).run('teacher@vaatiacollege.com.ng', 'nexus2026', 'teacher', 'Mr. T.T. Tyohuna');
+    `);
 
-    db.prepare(`
-      INSERT INTO users (email, password, role, display_name)
-      VALUES (?, ?, ?, ?)
-    `).run('parent@vaatiacollege.com.ng', 'nexus2026', 'parent', 'Mrs. M. Terhemba');
+    for (const user of users) insert.run(...user);
   }
 
   const studentCount = db.prepare('SELECT COUNT(*) AS c FROM students').get();
@@ -120,14 +124,14 @@ function initialise() {
     `);
 
     const seed = [
-      { id: 'VCM/25/0142', name: 'Terhemba Doose', class_name: 'SSS 2 Science', house: 'Akume House', state: 'Benue', fee_status: 'Paid', attendance: 98, status: 'Boarding', jamb_score: '—', notes: 'Good conduct' },
-      { id: 'VCM/25/0088', name: 'Aondohemba David', class_name: 'SSS 3 Science', house: 'Unity House', state: 'Benue', fee_status: 'Part', attendance: 96, status: 'Boarding', jamb_score: '328', notes: 'Needs fee follow-up' },
-      { id: 'VCM/25/0211', name: 'Mlumun Faith', class_name: 'JSS 3', house: 'Service House', state: 'Benue', fee_status: 'Paid', attendance: 99, status: 'Boarding', jamb_score: '—', notes: 'Excellent attendance' },
-      { id: 'VCM/24/0034', name: 'Shagba Emmanuel', class_name: 'SSS 3 Arts', house: 'Integrity House', state: 'Nasarawa', fee_status: 'Paid', attendance: 94, status: 'Boarding', jamb_score: '301', notes: 'Strong arts performance' },
-      { id: 'VCM/25/0177', name: 'Eyioma Zion', class_name: 'JSS 2', house: 'Akume House', state: 'FCT', fee_status: 'Due', attendance: 97, status: 'Boarding', jamb_score: '—', notes: 'Fee reminder sent' },
+      { id: 'VCM/25/0142', name: 'Terhemba Doose', class_name: 'SSS 2 Science', house: 'Akume House', state: 'Benue', fee_status: 'Paid', attendance: 98, status: 'Boarding', jamb_score: '—', notes: 'Excellent discipline and attendance record' },
+      { id: 'VCM/25/0088', name: 'Aondohemba David', class_name: 'SSS 3 Science', house: 'Unity House', state: 'Benue', fee_status: 'Part', attendance: 96, status: 'Boarding', jamb_score: '328', notes: 'Balance due: 246000' },
+      { id: 'VCM/25/0211', name: 'Mlumun Faith', class_name: 'JSS 3', house: 'Service House', state: 'Benue', fee_status: 'Paid', attendance: 99, status: 'Boarding', jamb_score: '—', notes: 'Excellent student' },
+      { id: 'VCM/24/0034', name: 'Shagba Emmanuel', class_name: 'SSS 3 Arts', house: 'Integrity House', state: 'Nasarawa', fee_status: 'Paid', attendance: 94, status: 'Boarding', jamb_score: '301', notes: 'Strong academics' },
+      { id: 'VCM/25/0177', name: 'Eyioma Zion', class_name: 'JSS 2', house: 'Akume House', state: 'FCT', fee_status: 'Due', attendance: 97, status: 'Boarding', jamb_score: '—', notes: 'Fee reminder issued' },
       { id: 'VCM/23/0019', name: 'Sedoo Terfa', class_name: 'SSS 1 Science', house: 'Excellence House', state: 'Benue', fee_status: 'Paid', attendance: 100, status: 'Boarding', jamb_score: '—', notes: 'Top performer' },
-      { id: 'VCM/25/0250', name: 'Kwaghgba Peter', class_name: 'JSS 1 / Basic 7', house: 'Unity House', state: 'Benue', fee_status: 'Paid', attendance: 95, status: 'Boarding', jamb_score: '—', notes: 'Transition good' },
-      { id: 'VCM/24/0112', name: 'Nguhemen Ruth', class_name: 'SSS 2 Arts', house: 'Service House', state: 'Benue', fee_status: 'Paid', attendance: 93, status: 'Day request', jamb_score: '—', notes: 'Part-time student' }
+      { id: 'VCM/25/0250', name: 'Kwaghgba Peter', class_name: 'JSS 1 / Basic 7', house: 'Unity House', state: 'Benue', fee_status: 'Paid', attendance: 95, status: 'Boarding', jamb_score: '—', notes: 'Settling in well' },
+      { id: 'VCM/24/0112', name: 'Nguhemen Ruth', class_name: 'SSS 2 Arts', house: 'Service House', state: 'Benue', fee_status: 'Paid', attendance: 93, status: 'Day request', jamb_score: '—', notes: 'Tracks daily attendance' }
     ];
 
     const tx = db.transaction((rows) => {
