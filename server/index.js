@@ -5,7 +5,24 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 const fs = require('fs');
 const { authenticate, publicUser } = require('./auth');
-const { getStudents, getStudentById, saveStudent, getVPData, saveVPData } = require('./db');
+const {
+  getStudents,
+  getStudentById,
+  saveStudent,
+  listClasses,
+  listHouses,
+  listStaff,
+  listFeeRecords,
+  listAttendance,
+  getVPData,
+  saveVPData,
+  createFeeRecord,
+  createAttendanceRecord,
+  createStaffMember,
+  createClassItem,
+  createHouseEntry,
+  createVpRecord,
+} = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,8 +51,6 @@ app.use(session({
   }
 }));
 
-// CORS is intentionally disabled: the browser UI and API are same-origin.
-// This also rejects cross-origin browser submissions before they reach handlers.
 app.use('/api', (req, res, next) => {
   const origin = req.get('origin');
   if (origin && origin !== `${req.protocol}://${req.get('host')}`) {
@@ -143,6 +158,93 @@ app.put('/api/students/:id', requireAjaxHeader, requireRole('principal', 'admin'
   res.json(saveStudent({ ...student, name: student.name.trim(), attendance }));
 });
 
+app.get('/api/classes', requireRole('principal', 'admin', 'vp_admin', 'academics', 'dean', 'teacher'), (req, res) => {
+  res.json(listClasses());
+});
+
+app.post('/api/classes', requireAjaxHeader, requireRole('principal', 'admin'), (req, res) => {
+  if (!req.body || !req.body.name || !String(req.body.name).trim()) {
+    return res.status(400).json({ error: 'Class name is required.' });
+  }
+  const created = createClassItem({
+    name: String(req.body.name).trim(),
+    level: String(req.body.level || ''),
+    teacher: String(req.body.teacher || '')
+  });
+  res.status(201).json(created);
+});
+
+app.get('/api/houses', requireRole('principal', 'admin', 'hostel', 'bursar'), (req, res) => {
+  res.json(listHouses());
+});
+
+app.post('/api/houses', requireAjaxHeader, requireRole('principal', 'admin', 'hostel'), (req, res) => {
+  if (!req.body || !req.body.name || !String(req.body.name).trim()) {
+    return res.status(400).json({ error: 'House name is required.' });
+  }
+  const created = createHouseEntry({
+    name: String(req.body.name).trim(),
+    capacity: Number(req.body.capacity || 0),
+    occupancy: Number(req.body.occupancy || 0)
+  });
+  res.status(201).json(created);
+});
+
+app.get('/api/staff', requireRole('principal', 'admin', 'vp_admin', 'academics', 'dean', 'teacher'), (req, res) => {
+  res.json(listStaff());
+});
+
+app.post('/api/staff', requireAjaxHeader, requireRole('principal', 'admin'), (req, res) => {
+  if (!req.body || !req.body.name || !String(req.body.name).trim()) {
+    return res.status(400).json({ error: 'Staff name is required.' });
+  }
+  const created = createStaffMember({
+    name: String(req.body.name).trim(),
+    role: String(req.body.role || ''),
+    department: String(req.body.department || ''),
+    phone: String(req.body.phone || ''),
+    salary: Number(req.body.salary || 0)
+  });
+  res.status(201).json(created);
+});
+
+app.get('/api/fees', requireRole('principal', 'admin', 'bursar', 'teacher'), (req, res) => {
+  res.json(listFeeRecords());
+});
+
+app.post('/api/fees', requireAjaxHeader, requireRole('principal', 'admin', 'bursar'), (req, res) => {
+  if (!req.body || !req.body.student_id || !req.body.student_name) {
+    return res.status(400).json({ error: 'Student id and name are required.' });
+  }
+  const created = createFeeRecord({
+    student_id: String(req.body.student_id).trim(),
+    student_name: String(req.body.student_name).trim(),
+    amount: Number(req.body.amount || 0),
+    status: String(req.body.status || 'Due'),
+    due_date: req.body.due_date || null,
+    notes: String(req.body.notes || '')
+  });
+  res.status(201).json(created);
+});
+
+app.get('/api/attendance', requireRole('principal', 'admin', 'academics', 'dean', 'teacher'), (req, res) => {
+  res.json(listAttendance());
+});
+
+app.post('/api/attendance', requireAjaxHeader, requireRole('principal', 'admin', 'teacher', 'academics'), (req, res) => {
+  if (!req.body || !req.body.student_id || !req.body.student_name || !req.body.date) {
+    return res.status(400).json({ error: 'Student id, name, and date are required.' });
+  }
+  const created = createAttendanceRecord({
+    student_id: String(req.body.student_id).trim(),
+    student_name: String(req.body.student_name).trim(),
+    date: String(req.body.date),
+    present: Number(req.body.present || 0),
+    notes: String(req.body.notes || '')
+  });
+  res.status(201).json(created);
+});
+
 app.get('/api/vp', requireRole('principal', 'admin', 'vp_admin'), (req, res) => {
   res.json(getVPData());
 });
@@ -152,6 +254,19 @@ app.post('/api/vp', requireAjaxHeader, requireRole('principal', 'admin', 'vp_adm
     return res.status(400).json({ error: 'A VP data object is required.' });
   }
   res.json(saveVPData(req.body));
+});
+
+app.post('/api/vp/records', requireAjaxHeader, requireRole('principal', 'admin', 'vp_admin'), (req, res) => {
+  if (!req.body || !req.body.title || !String(req.body.title).trim()) {
+    return res.status(400).json({ error: 'A record title is required.' });
+  }
+  const created = createVpRecord({
+    title: String(req.body.title).trim(),
+    category: String(req.body.category || ''),
+    date: String(req.body.date || ''),
+    details: String(req.body.details || '')
+  });
+  res.status(201).json(created);
 });
 
 app.use('/api', (req, res) => res.status(404).json({ error: 'Not found.' }));
